@@ -6,14 +6,17 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 01:06:36 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 01:27:51 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include "json.h"
 #include "json_error.h"
-#include "json_impl_.h"
+#include "parse_buffer.h"
+
+static t_json	*json_new_item(void);
+static int		parse_value(t_json *item, t_parse_buffer * const buf);
 
 t_json	*json_parse(const char *json_text)
 {
@@ -30,7 +33,7 @@ t_json	*json_parse(const char *json_text)
 		return (NULL);
 	}
 	parse_buffer_init(&buffer, json_text);
-	if (parse_value(item, buffer) != 0)
+	if (parse_value(item, parse_buffer_skip_whitespace(&buffer)) != 0)
 	{
 		json_delete(item);
 		return (NULL);
@@ -38,12 +41,11 @@ t_json	*json_parse(const char *json_text)
 	return (item);
 }
 
-static void	parse_buffer_init(t_parse_buffer *self, const char *json_text)
+static int		parse_value(t_json *item, t_parse_buffer * const buf)
 {
-	self->content = json_text;
-	self->length = strlen(json_text);
-	self->offset = 0;
-	self->depth = 0;
+	if (!buf || !buf->content)
+		return (-1);
+	
 }
 
 static t_json	*json_new_item(void)

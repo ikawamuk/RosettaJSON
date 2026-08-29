@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   json_impl_.h                                       :+:      :+:    :+:   */
+/*   parse_buffer.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:51:44 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 01:08:15 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 01:21:40 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef JSON_IMPL__H
-# define JSON_IMPL__H
+#ifndef PARSE_BUFFER_H
+# define PARSE_BUFFER_H
 
-# include "json.h"
-# include "json_error.h"
+# include <stddef.h>
 
 typedef struct s_parse_buffer
 {
@@ -23,5 +22,8 @@ typedef struct s_parse_buffer
 	size_t				offset;
 	size_t				depth;
 }	t_parse_buffer;
+
+void			parse_buffer_init(t_parse_buffer *self, const char *text);
+t_parse_buffer	*parse_buffer_skip_whitespace(t_parse_buffer * const buffer);
 
 #endif
