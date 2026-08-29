@@ -4,3 +4,7 @@
 !.gitignore
 !.gitkeep
 !README.md
+
+!c/*.c
+!c/*.h
+
