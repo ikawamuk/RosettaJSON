@@ -5,6 +5,6 @@
 !.gitkeep
 !README.md
 
-!c/*.c
-!c/*.h
+!c/**/*.c
+!c/**/*.h
 
