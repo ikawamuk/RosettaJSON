@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 00:43:53 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 02:04:52 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 
 typedef enum e_json_type
 {
-	Error,
-	Null,
-	Boolean,
-	Number,
-	String,
-	Array,
-	Object
+	JSON_Error,
+	JSON_Null,
+	JSON_True,
+	JSON_False,
+	JSON_Number,
+	JSON_String,
+	JSON_Array,
+	JSON_Object
 }	t_json_type;
 
 typedef enum e_json_error_code
@@ -38,7 +39,6 @@ typedef struct s_json
 	t_json_type		type;
 	union u_json_data
 	{
-		void	*null_data;
 		bool	bool_data;
 		int		int_data;
 		double	double_data;
@@ -56,7 +56,7 @@ typedef struct s_json
 			char			*key;
 			struct s_json	*value;
 		}	object_data;
-	};
+	}	_;
 }	t_json;
 
 /**

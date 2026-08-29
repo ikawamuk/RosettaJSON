@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_buffer.h                                     :+:      :+:    :+:   */
+/*   parse_null.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/30 00:51:44 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 01:21:40 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/08/30 01:44:28 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/08/30 02:02:13 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSE_BUFFER_H
-# define PARSE_BUFFER_H
+#include <string.h>
+#include "json.h"
+#include "buffer.h"
 
-# include <stddef.h>
-
-typedef struct s_parse_buffer
+bool	parse_null(t_json *item, t_buffer *const buf)
 {
-	const unsigned char	*content;
-	size_t				length;
-	size_t				offset;
-	size_t				depth;
-}	t_parse_buffer;
-
-void			parse_buffer_init(t_parse_buffer *self, const char *text);
-t_parse_buffer	*parse_buffer_skip_whitespace(t_parse_buffer * const buffer);
-
-#endif
+	if (!can_read_n_bytes(buf, 4)
+		|| strncmp((const char *)buffer_at_offset(buf), "null", 4) != 0)
+		return (false);
+	item->type = JSON_Null;
+	buf->offset += 4;
+	return (true);
+}
