@@ -6,18 +6,18 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 01:44:28 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:02:13 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 02:25:47 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include "json.h"
-#include "buffer.h"
+#include "parse_buf.h"
 
-bool	parse_null(t_json *item, t_buffer *const buf)
+bool	parse_null(t_json *item, t_parse_buf *const buf)
 {
 	if (!can_read_n_bytes(buf, 4)
-		|| strncmp((const char *)buffer_at_offset(buf), "null", 4) != 0)
+		|| strncmp((const char *)parse_buf_at_offset(buf), "null", 4) != 0)
 		return (false);
 	item->type = JSON_Null;
 	buf->offset += 4;

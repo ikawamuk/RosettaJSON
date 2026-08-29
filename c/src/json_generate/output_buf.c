@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_true.c                                       :+:      :+:    :+:   */
+/*   output_buf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/30 01:44:28 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:25:47 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/08/30 02:34:44 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/08/30 02:44:52 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
-#include "json.h"
-#include "parse_buf.h"
+#include <stdlib.h>
+#include "output_buf.h"
 
-bool	parse_true(t_json *item, t_parse_buf *const buf)
+int	output_buf_init(t_output_buf *self, bool is_formatted)
 {
-	if (!can_read_n_bytes(buf, 4)
-		|| strncmp((const char *)parse_buf_at_offset(buf), "null", 4) != 0)
-		return (false);
-	item->type = JSON_True;
-	item->_.bool_data = true;
-	buf->offset += 4;
-	return (true);
+	static const size_t	default_buffer_size = 256;
+
+	self->content = malloc(sizeof(char) * default_buffer_size);
+	self->length = default_buffer_size;
+	self->offset = 0;
+	self->length = 0;
+	self->is_formatted = is_formatted;
+	if (self->content)
+		return (-1);
+	return (0);
 }

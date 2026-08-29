@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:03:36 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 02:44:06 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,18 @@
 #include <ctype.h>
 #include "json.h"
 #include "json_error.h"
-#include "buffer.h"
+#include "parse_buf.h"
 
 static t_json	*json_new_item(void);
-static int		parse_value(t_json *item, t_buffer *const buf);
-bool			parse_true(t_json *item, t_buffer *const buf);
-bool			parse_false(t_json *item, t_buffer *const buf);
-
-bool	parse_null(t_json *item, t_buffer *const buf);
-
+static int		parse_value(t_json *item, t_parse_buf *const buf);
+bool			parse_true(t_json *item, t_parse_buf *const buf);
+bool			parse_false(t_json *item, t_parse_buf *const buf);
+bool			parse_null(t_json *item, t_parse_buf *const buf);
 
 t_json	*json_parse(const char *json_text)
 {
 	t_json		*item;
-	t_buffer	buffer;
+	t_parse_buf	buffer;
 
 	if (!json_text)
 		return (NULL);
@@ -38,8 +36,8 @@ t_json	*json_parse(const char *json_text)
 		json_set_error(0, FAILED_TO_MEMORY_ALLOCATION);
 		return (NULL);
 	}
-	buffer_init(&buffer, json_text);
-	if (parse_value(item, buffer_skip_whitespace(&buffer)) != 0)
+	parse_buf_init(&buffer, json_text);
+	if (parse_value(item, parse_buf_skip_whitespace(&buffer)) != 0)
 	{
 		json_delete(item);
 		return (NULL);
@@ -47,7 +45,7 @@ t_json	*json_parse(const char *json_text)
 	return (item);
 }
 
-static int	parse_value(t_json *item, t_buffer *const buf)
+static int	parse_value(t_json *item, t_parse_buf *const buf)
 {
 	char	c;
 
@@ -55,13 +53,13 @@ static int	parse_value(t_json *item, t_buffer *const buf)
 		return (-1);
 	if (!can_access_at_index(buf, 0))
 		return (-1);
-	c = buffer_at_offset(buf)[0];
+	c = parse_buf_at_offset(buf)[0];
 	if (c == 'n')
 		return (parse_null(item, buf));
 	else if (c == 't')
 		retrun (parse_true(item, buf));
 	else if (c == 'f')
-	// 	retrun (parse_false(item, buf));
+		retrun (parse_false(item, buf));
 	// else if (c == '-' || isdigit(c))
 	// 	return (parse_number(item, buf));
 	// else if (c == '"')

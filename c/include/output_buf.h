@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   json_generate_unformatted.c                        :+:      :+:    :+:   */
+/*   output_buf.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/30 00:22:21 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 01:07:11 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/08/30 02:25:15 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/08/30 02:45:20 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json.h"
-#include "json_error.h"
+#ifndef OUTPUT_BUF_H
+# define OUTPUT_BUF_H
 
-char	*json_generate_unformatted(const t_json *item)
+# include <stddef.h>
+# include <stdbool.h>
+
+typedef struct s_output_buf
 {
-	return (NULL);
-}
+	const unsigned char	*content;
+	size_t				length;
+	size_t				offset;
+	size_t				depth;
+	bool				is_formatted;
+}	t_output_buf;
+
+int	output_buf_init(t_output_buf *self, bool is_formatted);
+
+#endif
