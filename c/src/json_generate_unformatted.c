@@ -1,38 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   json.c                                             :+:      :+:    :+:   */
+/*   json_generate_unformatted.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/29 22:37:22 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 00:14:25 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/08/30 00:22:21 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/08/30 00:22:33 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "json.h"
 #include "json_error.h"
 
-t_json	*json_parse(const char *json_text)
-{
-	json_error_reset();
-}
-
-
-void	json_delete(t_json *item)
-{
-	
-}
-
-
-char	*json_generate(const t_json *item)
-{
-	
-}
-
-
 char	*json_generate_unformatted(const t_json *item)
 {
 	
 }
-
