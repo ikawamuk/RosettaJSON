@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 01:44:28 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:48:54 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:53:05 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	parse_false(t_json *item, t_parse_buf *const buf)
 	if (!can_read_n_bytes(buf, 5)
 		|| strncmp((const char *)parse_buf_at_offset(buf), "false", 5) != 0)
 	{
-		json_set_error(buf->offset, FAILED_TO_MEMORY_ALLOCATION);
+		json_set_error(buf->offset, INVALID_TOKEN);
 		return (-1);
 	}
 	item->type = JSON_False;
