@@ -6,14 +6,19 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:22:02 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:17:31 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:43:16 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <string.h>
 #include "json.h"
 #include "json_error.h"
 #include "output_buf.h"
+
+static char	*generate(t_json const *const item, bool is_formatted);
+static int	generate_value(t_json const *const item, t_output_buf *const buf);
+static void	update_offset(t_output_buf *const buf);
 
 int	generate_null(t_json const *const item, t_output_buf *const buf);
 int	generate_true(t_json const *const item, t_output_buf *const buf);
@@ -29,6 +34,7 @@ char	*json_generate_unformatted(const t_json *item)
 	return (generate(item, false));
 }
 
+#include <stdio.h>
 static char	*generate(t_json const *const item, bool is_formatted)
 {
 	char				*rev;
@@ -39,13 +45,14 @@ static char	*generate(t_json const *const item, bool is_formatted)
 		return (NULL);
 	if (generate_value(item, &buf) != 0)
 	{
-		free(buf.content);
+		free((void*)buf.content);
 		return (NULL);
 	}
-	rev = realloc(buf.content, buf.offset + 1);
+	update_offset(&buf);
+	rev = realloc((void *)buf.content, buf.offset + 1);
 	if (!rev)
 	{
-		free(buf.content);
+		free((void*)buf.content);
 		return (NULL);
 	}
 	rev[buf.offset] = '\0';
@@ -54,7 +61,7 @@ static char	*generate(t_json const *const item, bool is_formatted)
 
 static int	generate_value(t_json const *const item, t_output_buf *const buf)
 {
-	if (!item || buf)
+	if (!item || !buf)
 		return (-1);
 	if (item->type == JSON_Null)
 		return (generate_null(item, buf));
@@ -63,4 +70,15 @@ static int	generate_value(t_json const *const item, t_output_buf *const buf)
 	else if (item->type == JSON_False)
 		return (generate_false(item, buf));
 	return (-1);
+}
+
+static void	update_offset(t_output_buf *const buf)
+{
+	const char *ptr;
+
+	ptr = NULL;
+	if (!buf || !buf->content)
+		return ;
+	ptr = (const char *)buf->content + buf->offset;
+	buf->offset += strlen((const char *)ptr);
 }

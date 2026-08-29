@@ -6,21 +6,22 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:56:08 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:31:40 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "json.h"
 #include "json_error.h"
 #include "parse_buf.h"
 
 static t_json	*json_new_item(void);
 static int		parse_value(t_json *item, t_parse_buf *const buf);
-bool			parse_true(t_json *item, t_parse_buf *const buf);
-bool			parse_false(t_json *item, t_parse_buf *const buf);
-bool			parse_null(t_json *item, t_parse_buf *const buf);
+int				parse_true(t_json *item, t_parse_buf *const buf);
+int				parse_false(t_json *item, t_parse_buf *const buf);
+int				parse_null(t_json *item, t_parse_buf *const buf);
 
 t_json	*json_parse(const char *json_text)
 {
@@ -55,9 +56,9 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 	if (c == 'n')
 		return (parse_null(item, buf));
 	else if (c == 't')
-		retrun (parse_true(item, buf));
+		return (parse_true(item, buf));
 	else if (c == 'f')
-		retrun (parse_false(item, buf));
+		return (parse_false(item, buf));
 	// else if (c == '-' || isdigit(c))
 	// 	return (parse_number(item, buf));
 	// else if (c == '"')
@@ -66,7 +67,7 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 	// 	parse_array(item, buf);
 	// else if (c == '{')
 	// 	return (parse_object(item, buf));
-	return (false);
+	return (-1);
 }
 
 static t_json	*json_new_item(void)

@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:34:44 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:15:50 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:41:34 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	output_buf_init(t_output_buf *self, bool is_formatted)
 	self->offset = 0;
 	self->size = 0;
 	self->is_formatted = is_formatted;
-	if (self->content)
+	if (!self->content)
 		return (-1);
 	return (0);
 }
@@ -38,25 +38,25 @@ char	*ensure(t_output_buf *self, size_t needed)
 	new_buf = NULL;
 	new_size = 0;
 	if (!self || !self->content || INT_MAX < needed
-		|| (0 < self->size) && self->size <= self->offset)
+		|| ((0 < self->size) && self->size <= self->offset))
 		return (NULL);
 	needed += self->offset + 1;
 	if (needed <= self->size)
-		return (self->content + self->offset);
+		return ((char *)self->content + self->offset);
 	new_size = calculate_new_buffer_size(needed);
-	if (new_size == -1)
+	if (new_size == (size_t)-1)
 		return (NULL);
-	new_buf = realloc(self->content, new_size);
+	new_buf = realloc((void *)self->content, new_size);
 	if (!new_buf)
 	{
-		free(self->content);
+		free((void *)self->content);
 		self->content = NULL;
 		self->size = 0;
 		return (NULL);
 	}
-	self->content = new_buf;
+	self->content = (const unsigned char *)new_buf;
 	self->size = new_size;
-	return (self->content + self->offset);
+	return ((char *)self->content + self->offset);
 }
 
 static size_t	calculate_new_buffer_size(size_t needed)

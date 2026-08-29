@@ -6,10 +6,11 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:57:58 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:17:00 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:27:32 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "json.h"
 #include "output_buf.h"
 

@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 01:44:28 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:25:47 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:31:09 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 #include "json.h"
 #include "parse_buf.h"
 
-bool	parse_true(t_json *item, t_parse_buf *const buf)
+int	parse_true(t_json *item, t_parse_buf *const buf)
 {
 	if (!can_read_n_bytes(buf, 4)
-		|| strncmp((const char *)parse_buf_at_offset(buf), "null", 4) != 0)
-		return (false);
+		|| strncmp((const char *)parse_buf_at_offset(buf), "true", 4) != 0)
+		return (-1);
 	item->type = JSON_True;
 	item->_.bool_data = true;
 	buf->offset += 4;
-	return (true);
+	return (0);
 }
