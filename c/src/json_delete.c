@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:41 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 00:34:30 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 01:06:43 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,6 @@
 
 void	json_delete(t_json *item)
 {
-	if (!item) return ;
+	if (!item)
+		return ;
 }
