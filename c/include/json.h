@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:04:52 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 02:56:36 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 typedef enum e_json_type
 {
-	JSON_Error,
 	JSON_Null,
 	JSON_True,
 	JSON_False,

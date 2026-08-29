@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 02:44:06 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 02:56:08 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,7 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 {
 	char	c;
 
-	if (!buf || !buf->content)
-		return (-1);
-	if (!can_access_at_index(buf, 0))
+	if (!buf || !buf->content || !can_access_at_index(buf, 0))
 		return (-1);
 	c = parse_buf_at_offset(buf)[0];
 	if (c == 'n')

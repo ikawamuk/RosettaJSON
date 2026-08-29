@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   output_buf.h                                       :+:      :+:    :+:   */
+/*   generate_false.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/30 02:25:15 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:15:58 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/08/30 02:57:58 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/08/30 03:16:54 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OUTPUT_BUF_H
-# define OUTPUT_BUF_H
+#include "json.h"
+#include "output_buf.h"
 
-# include <stddef.h>
-# include <stdbool.h>
-
-typedef struct s_output_buf
+int	generate_false(t_json const *const item, t_output_buf *const buf)
 {
-	const unsigned char	*content;
-	size_t				size;
-	size_t				offset;
-	size_t				depth;
-	bool				is_formatted;
-}	t_output_buf;
+	char	*write_pos;
 
-int	output_buf_init(t_output_buf *self, bool is_formatted);
-char	*ensure(t_output_buf *self, size_t needed);
-
-#endif
+	if (!item || !buf)
+		return (-1);
+	write_pos = ensure(buf, 6);
+	if (!write_pos)
+		return (-1);
+	strcpy(write_pos, "false");
+	return (0);
+}
