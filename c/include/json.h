@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/29 23:28:57 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 00:03:38 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define JSON_H
 
 # include <stdbool.h>
+# include <stddef.h>
 
 typedef enum e_json_type
 {
@@ -56,9 +57,9 @@ typedef struct s_json
  * @brief JSON文字列を解析し、t_jsonオブジェクト構造体を生成します。
  * @param json_text 解析対象のJSON文字列
  * @return 正常時は生成された t_json へのポインタ。失敗時は NULL
- * @note 戻り値のメモリは不要になったら json_delete() で解放してください。解法の責任は呼び出し元にあります
+ * @note 戻り値のメモリは不要になったら json_delete() で解放してください。解放の責任は呼び出し元にあります
  */
-t_json	*josn_parse(const char *json_text);
+t_json	*json_parse(const char *json_text);
 
 /**
  * @brief t_jsonオブジェクトとそれに含まれるすべての要素を再帰的に削除（メモリ解放）します。
@@ -106,6 +107,6 @@ char	*json_get_error_message(int error_code);
  * @return 0始まりのエラー発生位置。エラーがない場合は (size_t)-1
  * @note 先頭でエラーが起きた場合は 0 を返します。
  */
-size_t	json_get_error_possision(void);
+size_t	json_get_error_position(void);
 
 #endif
