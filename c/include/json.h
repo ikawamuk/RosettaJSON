@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 00:03:38 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 00:43:53 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ typedef enum e_json_type
 	Array,
 	Object
 }	t_json_type;
+
+typedef enum e_json_error_code
+{
+	NO_ERROR,
+	FAILED_TO_MEMORY_ALLOCATION
+}	t_json_error_code;
 
 typedef struct s_json
 {
