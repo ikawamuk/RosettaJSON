@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:31:40 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:49:26 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 	// 	parse_array(item, buf);
 	// else if (c == '{')
 	// 	return (parse_object(item, buf));
+	json_set_error(buf->offset, INVALID_TOKEN);
 	return (-1);
 }
 

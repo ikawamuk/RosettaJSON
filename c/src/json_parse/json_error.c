@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:11:36 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 00:45:24 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:50:25 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,7 @@ char	*json_get_error_message(int error_code)
 		return ("No error occurred");
 	if (error_code == FAILED_TO_MEMORY_ALLOCATION)
 		return ("Failed to memmory allocation");
+	if (error_code == INVALID_TOKEN)
+		return ("Invalid token");
 	return ("Unknown error occurred");
 }
