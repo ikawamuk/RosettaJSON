@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:22:02 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:43:16 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 03:54:38 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static char	*generate(t_json const *const item, bool is_formatted);
 static int	generate_value(t_json const *const item, t_output_buf *const buf);
 static void	update_offset(t_output_buf *const buf);
 
-int	generate_null(t_json const *const item, t_output_buf *const buf);
-int	generate_true(t_json const *const item, t_output_buf *const buf);
-int	generate_false(t_json const *const item, t_output_buf *const buf);
+int			generate_null(t_json const *const item, t_output_buf *const buf);
+int			generate_true(t_json const *const item, t_output_buf *const buf);
+int			generate_false(t_json const *const item, t_output_buf *const buf);
 
 char	*json_generate(const t_json *item)
 {
@@ -34,7 +34,6 @@ char	*json_generate_unformatted(const t_json *item)
 	return (generate(item, false));
 }
 
-#include <stdio.h>
 static char	*generate(t_json const *const item, bool is_formatted)
 {
 	char				*rev;
@@ -45,14 +44,14 @@ static char	*generate(t_json const *const item, bool is_formatted)
 		return (NULL);
 	if (generate_value(item, &buf) != 0)
 	{
-		free((void*)buf.content);
+		free((void *)buf.content);
 		return (NULL);
 	}
 	update_offset(&buf);
 	rev = realloc((void *)buf.content, buf.offset + 1);
 	if (!rev)
 	{
-		free((void*)buf.content);
+		free((void *)buf.content);
 		return (NULL);
 	}
 	rev[buf.offset] = '\0';
@@ -74,7 +73,7 @@ static int	generate_value(t_json const *const item, t_output_buf *const buf)
 
 static void	update_offset(t_output_buf *const buf)
 {
-	const char *ptr;
+	const char	*ptr;
 
 	ptr = NULL;
 	if (!buf || !buf->content)
