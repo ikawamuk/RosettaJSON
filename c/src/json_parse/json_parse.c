@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 23:41:11 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 02:20:18 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@
 #include "json_error.h"
 #include "parse_buf.h"
 
-static t_json	*json_new_item(void);
-static int		parse_value(t_json *item, t_parse_buf *const buf);
-int				parse_true(t_json *item, t_parse_buf *const buf);
-int				parse_false(t_json *item, t_parse_buf *const buf);
-int				parse_null(t_json *item, t_parse_buf *const buf);
-int				parse_number(t_json *item, t_parse_buf *const buf);
-int				parse_string(t_json *item, t_parse_buf *const buf);
+static int	parse_value(t_json *item, t_parse_buf *const buf);
+t_json		*json_new_item(void);
+int			parse_true(t_json *item, t_parse_buf *const buf);
+int			parse_false(t_json *item, t_parse_buf *const buf);
+int			parse_null(t_json *item, t_parse_buf *const buf);
+int			parse_number(t_json *item, t_parse_buf *const buf);
+int			parse_string(t_json *item, t_parse_buf *const buf);
+int			parse_array(t_json *item, t_parse_buf *const buf);
 
 t_json	*json_parse(const char *json_text)
 {
@@ -71,14 +72,4 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 	// 	return (parse_object(item, buf));
 	json_set_error(buf->offset, INVALID_TOKEN);
 	return (-1);
-}
-
-static t_json	*json_new_item(void)
-{
-	t_json	*item;
-
-	item = malloc(sizeof(t_json));
-	if (item)
-		memset(item, 0, sizeof(t_json));
-	return (item);
 }

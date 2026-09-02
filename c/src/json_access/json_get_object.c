@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:41:03 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 22:41:24 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 23:53:42 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	json_has_object_item(t_json const *const object, const char *key)
 {
 	struct s_json_object	*cur;
 
-	cur = &object->_.object_data;
+	cur = object->_.object_data;
 	while (cur)
 	{
 		if (cur->key && strcmp(cur->key, key) == 0 && cur->value)
@@ -30,7 +30,7 @@ t_json	*json_get_object_item(t_json const *const object, const char *key)
 {
 	struct s_json_object	*cur;
 
-	cur = &object->_.object_data;
+	cur = object->_.object_data;
 	while (cur)
 	{
 		if (cur->key && strcmp(cur->key, key) == 0 && cur->value)
