@@ -6,7 +6,7 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/08/30 03:18:24 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/02 20:04:19 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,13 +34,17 @@ SRCS		:= \
 	$(SRC_DIR)/json_parse/parse_null.c \
 	$(SRC_DIR)/json_parse/parse_true.c \
 	$(SRC_DIR)/json_parse/parse_false.c \
+	$(SRC_DIR)/json_parse/parse_number.c \
+	$(SRC_DIR)/json_parse/parse_string.c \
 	$(SRC_DIR)/json_generate/json_generate.c \
 	$(SRC_DIR)/json_generate/output_buf.c \
 	$(SRC_DIR)/json_generate/generate_null.c \
 	$(SRC_DIR)/json_generate/generate_true.c \
 	$(SRC_DIR)/json_generate/generate_false.c
 
-TEST_SRCS	:= main.c
+TEST_SRCS := $(wildcard src/test/*.c)
+TEST_OBJS := $(TEST_SRCS:src/test/%.c=obj/test_%.o)
+TEST_TARGET := rosetta_json_test
 
 OBJS		:= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 TEST_OBJS	:= $(TEST_SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -71,10 +75,17 @@ clean:
 	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME) $(TEST_NAME)
+	$(RM) $(NAME) $(TEST_NAME) $(TEST_TARGET)
 
 re: fclean all
 
+test: $(TEST_TARGET)
+	@echo "--- Running Tests ---"
+	./$(TEST_TARGET)
+
+$(TEST_TARGET): $(TEST_OBJS) libjson.a
+	$(CC) $(TEST_OBJS) -L. -ljson $(LDFLAGS) -o $@
+
 -include $(DEPS)
 
-.PHONY: all test debug clean fclean re
+.PHONY: all test debug clean fclean re test
