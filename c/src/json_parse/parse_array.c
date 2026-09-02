@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:05:46 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 08:06:25 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	parse_array_core(t_json_array **list, t_parse_buf *const buf)
 	while (1)
 	{
 		if (update_cur_node(&cur, buf) != 0)
-			fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION);
+			return (fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION));
 		if (parse_value(cur->element, parse_buf_skip_whitespace(buf)) != 0)
 			return (fail(buf, *list, json_get_error_code()));
 		parse_buf_skip_whitespace(buf);
