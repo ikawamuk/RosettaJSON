@@ -6,21 +6,21 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 02:20:56 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 02:35:14 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 07:53:45 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "json.h"
 #include "output_buf.h"
 
-int		generate_value(t_json const *const item, t_output_buf *const buf);
-void	update_offset(t_output_buf *const self);
+static int	generate_elements(t_json const *item, t_output_buf *const buf);
+static int	generate_separator(t_json const *item, t_output_buf *const buf);
+int			generate_value(t_json const *const item, t_output_buf *const buf);
+void		update_offset(t_output_buf *const self);
 
 int	generate_array(t_json const *const item, t_output_buf *const buf)
 {
-	char			*write_pos;
-	t_json_array	*cur;
-	size_t			length;
+	char	*write_pos;
 
 	if (!item || !buf)
 		return (-1);
@@ -32,6 +32,21 @@ int	generate_array(t_json const *const item, t_output_buf *const buf)
 		return (-1);
 	*write_pos = '[';
 	++buf->offset;
+	if (generate_elements(item, buf) != 0)
+		return (-1);
+	write_pos = ensure(buf, 2);
+	if (!write_pos)
+		return (-1);
+	*write_pos++ = ']';
+	*write_pos = '\0';
+	--buf->depth;
+	return (0);
+}
+
+static int	generate_elements(t_json const *item, t_output_buf *const buf)
+{
+	t_json_array	*cur;
+
 	cur = item->_.array_data;
 	while (cur)
 	{
@@ -39,27 +54,29 @@ int	generate_array(t_json const *const item, t_output_buf *const buf)
 			return (-1);
 		update_offset(buf);
 		if (cur->next)
-		{
-			if (buf->is_formatted)
-				length = 2;
-			else
-				length = 1;
-			write_pos = ensure(buf, length + 1);
-			if (!write_pos)
+			if (generate_separator(item, buf) != 0)
 				return (-1);
-			*write_pos++ = ',';
-			if (buf->is_formatted)
-				*write_pos++ = ' ';
-			*write_pos = '\0';
-			buf->offset += length;
-		}
 		cur = cur->next;
 	}
-	write_pos = ensure(buf, 2);
+	return (0);
+}
+
+static int	generate_separator(t_json const *item, t_output_buf *const buf)
+{
+	char	*write_pos;
+	size_t	length;
+
+	if (buf->is_formatted)
+		length = 2;
+	else
+		length = 1;
+	write_pos = ensure(buf, length + 1);
 	if (!write_pos)
 		return (-1);
-	*write_pos++ = ']';
+	*write_pos++ = ',';
+	if (buf->is_formatted)
+		*write_pos++ = ' ';
 	*write_pos = '\0';
-	--buf->depth;
+	buf->offset += length;
 	return (0);
 }
