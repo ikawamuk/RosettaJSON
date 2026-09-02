@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:37:25 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 08:43:44 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,19 @@ int	parse_array(t_json *item, t_parse_buf *const buf)
 	t_json_array	*tmp_array;
 
 	if (buf->depth >= JSON_NESTING_LIMIT)
-	{
-		json_set_error(buf->offset, NESTING_IS_TOO_DEEP);
-		return (-1);
-	}
+		return (fail(buf, NULL, NESTING_IS_TOO_DEEP));
 	++buf->depth;
 	if (parse_buf_at_offset(buf)[0] != '[')
-	{
-		json_set_error(buf->offset, INVALID_TOKEN);
-		return (-1);
-	}
+		return (fail(buf, NULL, INVALID_TOKEN));
 	++buf->offset;
 	parse_buf_skip_whitespace(buf);
 	if (can_access_at_index(buf, 0) && parse_buf_at_offset(buf)[0] == ']')
 		return (success(item, buf, NULL));
+	if (!can_access_at_index(buf, 0))
+	{
+		--buf->offset;
+		return (fail(buf, NULL, INVALID_TOKEN));
+	}
 	if (parse_array_core(&tmp_array, buf) != 0)
 		return (-1);
 	if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ']')
@@ -53,11 +52,6 @@ static int	parse_array_core(t_json_array **list, t_parse_buf *const buf)
 {
 	t_json_array	*cur;
 
-	if (!can_access_at_index(buf, 0))
-	{
-		--buf->offset;
-		return (fail(buf, NULL, INVALID_TOKEN));
-	}
 	*list = NULL;
 	cur = *list;
 	while (1)
