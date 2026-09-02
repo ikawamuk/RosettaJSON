@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 04:33:48 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 14:35:06 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ char	*json_get_error_message(int error_code);
  */
 size_t	json_get_error_position(void);
 
-
 /**
  * @brief JSON要素が null であるか判定します。
  * @param item 判定対象の JSON要素（NULL 許容）
@@ -191,7 +190,8 @@ size_t	json_get_array_size(t_json const *const array);
  * @brief 配列から指定したインデックスの JSON要素を取得します。
  * @param array 参照対象の配列型の JSON要素
  * @param index 取得したい要素の 0 始まりのインデックス
- * @return 指定したインデックスに位置する JSON要素へのポインタ。インデックスが範囲外、または array が NULL / 非配列の場合は NULL
+ * @return 指定したインデックスに位置する JSON要素へのポインタ。インデックスが範囲外、
+ * 			または array が NULL / 非配列の場合は NULL
  * @note インデックスの有効範囲は 0 <= index < json_get_array_size(array) です。
  */
 t_json	*json_get_array_element(t_json const *const array, size_t index);

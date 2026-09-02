@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:49:26 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/08/30 13:10:37 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 		return (parse_true(item, buf));
 	else if (c == 'f')
 		return (parse_false(item, buf));
-	// else if (c == '-' || isdigit(c))
-	// 	return (parse_number(item, buf));
+	else if (c == '-' || isdigit(c))
+		return (parse_number(item, buf));
 	// else if (c == '"')
 	// 	return (parse_string(item, buf));
 	// else if (c == '[')

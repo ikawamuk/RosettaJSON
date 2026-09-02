@@ -1,32 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   parse_number.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/30 02:05:16 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 14:35:16 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/08/30 13:10:57 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/09/02 14:34:39 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include <string.h>
 #include "json.h"
+#include "json_error.h"
+#include "parse_buf.h"
 
-int	main(int argc, char *argv[])
+int	parse_number(t_json *item, t_parse_buf *const buf)
 {
-	t_json	*json;
-
-	if (argc < 2)
-		return (1);
-	json = json_parse(argv[1]);
-	if (!json)
-		printf("Error: %zd: %s\n", json_get_error_position(), \
-		json_get_error_message(json_get_error_code()));
-	else
-	{
-		printf("%d\n", json->type);
-		printf("%s\n", json_generate(json));
-	}
-	return (0);
 }
