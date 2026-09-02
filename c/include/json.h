@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 14:35:06 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 20:24:17 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ typedef struct s_json
 		char	*string_data;
 		struct s_json_array
 		{
-			struct s_json	*prev;
-			struct s_json	*next;
-			struct s_json	*element;
+			struct s_json_array	*prev;
+			struct s_json_array	*next;
+			struct s_json		*element;
 		}	array_data;
 		struct s_json_object
 		{
-			struct s_json	*prev;
-			struct s_json	*next;
-			char			*key;
-			struct s_json	*value;
+			struct s_json_object	*prev;
+			struct s_json_object	*next;
+			char					*key;
+			struct s_json			*value;
 		}	object_data;
 	}	_;
 }	t_json;
@@ -211,7 +211,7 @@ bool	json_is_object(t_json const *const item);
  * @return 指定したキーが存在する場合は true、存在しない場合や引数が不適切な場合は false
  * @note 安全のため、object や key が NULL であっても呼び出し可能です。
  */
-bool	*json_has_object_item(t_json const *const object, const char *key);
+bool	json_has_object_item(t_json const *const object, const char *key);
 
 /**
  * @brief オブジェクトから指定したキーに対応する JSON要素を取得します。
