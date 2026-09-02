@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:22:02 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:54:38 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 23:42:37 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ static void	update_offset(t_output_buf *const buf);
 int			generate_null(t_json const *const item, t_output_buf *const buf);
 int			generate_true(t_json const *const item, t_output_buf *const buf);
 int			generate_false(t_json const *const item, t_output_buf *const buf);
+int			generate_number(t_json const *const item, t_output_buf *const buf);
+int			generate_string(t_json const *const item, t_output_buf *const buf);
 
 char	*json_generate(const t_json *item)
 {
@@ -64,10 +66,14 @@ static int	generate_value(t_json const *const item, t_output_buf *const buf)
 		return (-1);
 	if (item->type == JSON_Null)
 		return (generate_null(item, buf));
-	else if (item->type == JSON_True)
+	if (item->type == JSON_True)
 		return (generate_true(item, buf));
-	else if (item->type == JSON_False)
+	if (item->type == JSON_False)
 		return (generate_false(item, buf));
+	if (item->type == JSON_Number)
+		return (generate_number(item, buf));
+	if (item->type == JSON_String)
+		return (generate_string(item, buf));
 	return (-1);
 }
 
