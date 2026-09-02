@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 13:10:37 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 20:02:17 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static int		parse_value(t_json *item, t_parse_buf *const buf);
 int				parse_true(t_json *item, t_parse_buf *const buf);
 int				parse_false(t_json *item, t_parse_buf *const buf);
 int				parse_null(t_json *item, t_parse_buf *const buf);
+int				parse_number(t_json *item, t_parse_buf *const buf);
+int				parse_string(t_json *item, t_parse_buf *const buf);
 
 t_json	*json_parse(const char *json_text)
 {
@@ -61,8 +63,8 @@ static int	parse_value(t_json *item, t_parse_buf *const buf)
 		return (parse_false(item, buf));
 	else if (c == '-' || isdigit(c))
 		return (parse_number(item, buf));
-	// else if (c == '"')
-	// 	return (parse_string(item, buf));
+	else if (c == '"')
+		return (parse_string(item, buf));
 	// else if (c == '[')
 	// 	parse_array(item, buf);
 	// else if (c == '{')

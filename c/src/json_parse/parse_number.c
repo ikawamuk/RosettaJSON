@@ -6,17 +6,18 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 13:10:57 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 17:52:51 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 20:04:45 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "json.h"
 #include "json_error.h"
 #include "parse_buf.h"
 
-static size_t	count_number_string_buffer_size(t_parse_buf *const buf);
+static size_t	count_num_str_buf_size(t_parse_buf *const buf);
 
 int	parse_number(t_json *item, t_parse_buf *const buf)
 {
