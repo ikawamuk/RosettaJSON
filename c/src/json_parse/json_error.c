@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:11:36 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:50:25 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 02:23:54 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,7 @@ char	*json_get_error_message(int error_code)
 		return ("Failed to memmory allocation");
 	if (error_code == INVALID_TOKEN)
 		return ("Invalid token");
+	if (error_code == NESTING_IS_TOO_DEEP)
+		return ("Nesting is too deep");
 	return ("Unknown error occurred");
 }

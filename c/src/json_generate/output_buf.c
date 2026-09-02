@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:34:44 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:54:57 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 02:30:19 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,16 @@ char	*ensure(t_output_buf *self, size_t needed)
 	self->content = (const unsigned char *)new_buf;
 	self->size = new_size;
 	return ((char *)self->content + self->offset);
+}
+
+void	update_offset(t_output_buf *const self)
+{
+	char	*head;
+
+	if (!self || !self->content)
+		return ;
+	head = self->content + self->offset;
+	self->offset += strlen(head);
 }
 
 static size_t	calculate_new_buffer_size(size_t needed)

@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 02:19:07 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 02:23:29 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	parse_array(t_json *item, t_parse_buf *const buf)
 	t_json_array	*tmp_array;
 
 	if (buf->depth >= JSON_NESTING_LIMIT)
+	{
+		json_set_error(buf->offset, NESTING_IS_TOO_DEEP);
 		return (-1);
+	}
 	++buf->depth;
 	if (parse_buf_at_offset(buf)[0] != '[')
 	{

@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:22:02 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 23:42:37 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 02:26:33 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*generate(t_json const *const item, bool is_formatted)
 	return (rev);
 }
 
-static int	generate_value(t_json const *const item, t_output_buf *const buf)
+int	generate_value(t_json const *const item, t_output_buf *const buf)
 {
 	if (!item || !buf)
 		return (-1);
