@@ -6,10 +6,11 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:41 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 04:11:44 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/02 20:01:31 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "json.h"
 #include "json_error.h"
 
