@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:06:25 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 08:37:25 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 static int		update_cur_node(t_json_array **cur, t_parse_buf *const buf);
 static int		unclosed_brackets(t_parse_buf *buf);
 static int		success(t_json *item, t_parse_buf *buf, t_json_array *head);
+static int		fail(t_parse_buf *buf, t_json_array *array, t_error_code code);
 t_json_array	*json_array_new_element(void);
 void			json_array_delete(t_json_array *array);
 t_json			*json_new_item(void);
@@ -63,6 +64,7 @@ static int	parse_array_core(t_json_array **list, t_parse_buf *const buf)
 	{
 		if (update_cur_node(&cur, buf) != 0)
 			return (fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION));
+		++buf->offset;
 		if (parse_value(cur->element, parse_buf_skip_whitespace(buf)) != 0)
 			return (fail(buf, *list, json_get_error_code()));
 		parse_buf_skip_whitespace(buf);
@@ -90,7 +92,7 @@ static int	update_cur_node(t_json_array **cur, t_parse_buf *const buf)
 	return (0);
 }
 
-static int	fail(t_parse_buf *buf, t_json_array *array, t_json_error_code code)
+static int	fail(t_parse_buf *buf, t_json_array *array, t_error_code code)
 {
 	json_array_delete(array);
 	json_set_error(buf->offset, code);

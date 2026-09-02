@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:10:24 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 00:29:23 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 08:38:13 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 
 typedef struct s_json_error
 {
-	size_t				position;
-	t_json_error_code	code;
+	size_t			position;
+	t_error_code	code;
 }	t_json_error;
 
 void	json_error_reset(void);
-void	json_set_error(size_t pos, t_json_error_code code);
+void	json_set_error(size_t pos, t_error_code code);
 
 #endif

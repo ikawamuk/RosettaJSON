@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/03 07:54:38 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 07:56:39 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/09/03 08:37:25 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,105 @@
 #include "json_error.h"
 #include "parse_buf.h"
 
+static int		update_cur_node(t_json_object **cur, t_parse_buf *const buf);
+static int		unclosed_brackets(t_parse_buf *buf);
+static int		success(t_json *item, t_parse_buf *buf, t_json_object *head);
+static int		fail(t_parse_buf *buf, t_json_object *obj, t_error_code code);
+t_json_object	*json_object_new_member(void);
+void			json_object_delete(t_json_object *object);
+t_json			*json_new_item(void);
+int				parse_string(t_json *item, t_parse_buf *const buf);
+int				parse_value(t_json *item, t_parse_buf *const buf);
+
 int	parse_object(t_json *item, t_parse_buf *const buf)
 {
+	t_json_object	*tmp_object;
+
+	if (buf->depth >= JSON_NESTING_LIMIT)
+	{
+		json_set_error(buf->offset, NESTING_IS_TOO_DEEP);
+		return (-1);
+	}
+	++buf->depth;
+	if (parse_buf_at_offset(buf)[0] != '[')
+	{
+		json_set_error(buf->offset, INVALID_TOKEN);
+		return (-1);
+	}
+	++buf->offset;
+	parse_buf_skip_whitespace(buf);
+	if (can_access_at_index(buf, 0) && parse_buf_at_offset(buf)[0] == ']')
+		return (success(item, buf, NULL));
+	if (parse_object_core(&tmp_object, buf) != 0)
+		return (-1);
+	if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ']')
+		return (fail(buf, tmp_object, INVALID_TOKEN));
+	return (success(item, buf, tmp_object));
+}
+
+static int	parse_object_core(t_json_object **list, t_parse_buf *const buf)
+{
+	t_json_object	*cur;
+
+	if (!can_access_at_index(buf, 0))
+	{
+		--buf->offset;
+		return (fail(buf, NULL, INVALID_TOKEN));
+	}
+	*list = NULL;
+	cur = *list;
+	while (1)
+	{
+		if (update_cur_node(&cur, buf) != 0)
+			return (fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION));
+		++buf->offset;
+		if (parse_string(cur->value, parse_buf_skip_whitespace(buf)) != 0)
+			return (fail(buf, *list, json_get_error_code()));
+		cur->key = cur->value->_.string_data;
+		cur->value->_.string_data = NULL;
+		parse_buf_skip_whitespace(buf);
+		if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ':')
+			break ;
+		++buf->offset;
+		if (parse_value(cur->value, parse_buf_skip_whitespace(buf)) != 0)
+			return (fail(buf, *list, json_get_error_code()));
+		parse_buf_skip_whitespace(buf);
+		if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ',')
+			break ;
+	}
+	return (0);
+}
+
+static int	update_cur_node(t_json_object **cur, t_parse_buf *const buf)
+{
+	t_json_object	*next;
+
+	next = json_object_new_member();
+	if (!next)
+		return (-1);
+	if (!*cur)
+		*cur = next;
+	else
+	{
+		(*cur)->next = next;
+		next->prev = *cur;
+		*cur = next;
+	}
+	return (0);
+}
+
+static int	fail(t_parse_buf *buf, t_json_object *obj, t_error_code code)
+{
+	json_object_delete(obj);
+	json_set_error(buf->offset, code);
+	return (-1);
+}
+
+static int	success(t_json *item, t_parse_buf *buf, t_json_object *head)
+{
+	--buf->depth;
+	item->type == JSON_Object;
+	item->_.object_data = head;
+	++buf->offset;
 	return (0);
 }

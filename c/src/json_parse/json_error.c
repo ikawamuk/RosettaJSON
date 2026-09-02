@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:11:36 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 02:23:54 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 08:37:25 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static t_json_error	g_error;
 
-void	json_set_error(size_t pos, t_json_error_code code)
+void	json_set_error(size_t pos, t_error_code code)
 {
 	g_error.position = pos;
 	g_error.code = code;
