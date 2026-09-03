@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 02:20:56 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:58:51 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 10:00:04 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 static int	generate_members(t_json const *item, t_output_buf *const buf);
 static int	generate_colon(t_output_buf *const buf);
 static int	generate_new_line(t_output_buf *const buf);
+static int	generate_indent(t_output_buf *const buf);
 int			generate_comma(t_output_buf *const buf);
 int			generate_string_ptr(char *str, t_output_buf *const buf);
 int			generate_value(t_json const *const item, t_output_buf *const buf);
@@ -34,17 +35,20 @@ int	generate_object(t_json const *const item, t_output_buf *const buf)
 	if (!write_pos)
 		return (-1);
 	*write_pos = '{';
+	++buf->offset;
 	if (generate_new_line(buf) != 0)
 		return (-1);
-	++buf->offset;
 	if (generate_members(item, buf) != 0)
+		return (-1);
+	--buf->depth;
+	if (generate_indent(buf) != 0)
 		return (-1);
 	write_pos = ensure(buf, 2);
 	if (!write_pos)
 		return (-1);
 	*write_pos++ = '}';
 	*write_pos = '\0';
-	--buf->depth;
+	
 	return (0);
 }
 
@@ -55,6 +59,8 @@ static int	generate_members(t_json const *item, t_output_buf *const buf)
 	cur = item->_.object_data;
 	while (cur)
 	{
+		if (generate_indent(buf) != 0)
+			return (0);
 		if (generate_string_ptr(cur->key, buf) != 0)
 			return (-1);
 		if (generate_colon(buf) != 0)
@@ -69,6 +75,26 @@ static int	generate_members(t_json const *item, t_output_buf *const buf)
 			return (-1);
 		cur = cur->next;
 	}
+	return (0);
+}
+
+static int	generate_indent(t_output_buf *const buf)
+{
+	char	*write_pos;
+	size_t	i;
+
+	if (!buf->is_formatted)
+		return (0);
+	write_pos = ensure(buf, buf->depth);
+	if (!write_pos)
+		return (-1);
+	i = 0;
+	while (i < buf->depth)
+	{
+		*write_pos++ = '\t';
+		++i;
+	}
+	buf->offset += buf->depth;
 	return (0);
 }
 

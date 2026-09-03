@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 08:59:32 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:32:51 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:53:57 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	generate_string_ptr(char *str, t_output_buf *const buf)
 		memcpy(output + 1, str, output_length);
 		output[output_length + 1] = '\"';
 		output[output_length + 2] = '\0';
+		buf->offset += output_length + 2;
 		return (0);
 	}
 	

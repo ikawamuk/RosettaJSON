@@ -6,11 +6,12 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:05:16 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:30:51 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 10:02:24 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "json.h"
 
 int	main(int argc, char *argv[])
@@ -28,8 +29,14 @@ int	main(int argc, char *argv[])
 		json_get_error_message(json_get_error_code()));
 	else
 	{
+		char	*s = json_generate(json);
+		if (!s)
+			return (1);
 		printf("%d\n", json->type);
-		printf("%s\n", json_generate(json));
+		printf("%s\n", s);
+		free(s);
 	}
+	json_delete(json);
+	
 	return (0);
 }
