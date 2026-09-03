@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:44:44 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 10:06:21 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	parse_array(t_json *item, t_parse_buf *const buf)
 		return (fail(buf, NULL, INVALID_TOKEN));
 	}
 	--buf->offset;
-	
 	if (parse_array_core(&tmp_array, buf) != 0)
 		return (-1);
 	if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ']')

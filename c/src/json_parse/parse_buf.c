@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:26:05 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:40:58 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 10:07:21 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,14 @@
 #include <stdbool.h>
 #include "parse_buf.h"
 
+bool	is_json_whitespace(char c);
+
 void	parse_buf_init(t_parse_buf *self, const char *text)
 {
 	self->content = (const unsigned char *)text;
 	self->length = strlen(text);
 	self->offset = 0;
 	self->depth = 0;
-}
-
-static bool	is_json_whitespace(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
 }
 
 t_parse_buf	*parse_buf_skip_whitespace(t_parse_buf *const buf)

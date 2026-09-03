@@ -6,7 +6,7 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/09/03 09:23:40 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/03 10:08:10 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS		:= \
 	$(SRC_DIR)/json_parse/json_new_item.c \
 	$(SRC_DIR)/json_parse/json_error.c \
 	$(SRC_DIR)/json_parse/parse_buf.c \
+	$(SRC_DIR)/json_parse/is_json_whitespace.c \
 	$(SRC_DIR)/json_parse/parse_null.c \
 	$(SRC_DIR)/json_parse/parse_true.c \
 	$(SRC_DIR)/json_parse/parse_false.c \
