@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   generate_array.c                                   :+:      :+:    :+:   */
+/*   generate_object.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 02:20:56 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:55:37 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 08:58:51 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "json.h"
 #include "output_buf.h"
 
-static int	generate_elements(t_json const *item, t_output_buf *const buf);
+static int	generate_members(t_json const *item, t_output_buf *const buf);
+static int	generate_colon(t_output_buf *const buf);
+static int	generate_new_line(t_output_buf *const buf);
 int			generate_comma(t_output_buf *const buf);
+int			generate_string_ptr(char *str, t_output_buf *const buf);
 int			generate_value(t_json const *const item, t_output_buf *const buf);
 void		update_offset(t_output_buf *const self);
 
-int	generate_array(t_json const *const item, t_output_buf *const buf)
+int	generate_object(t_json const *const item, t_output_buf *const buf)
 {
 	char	*write_pos;
 
@@ -30,38 +33,61 @@ int	generate_array(t_json const *const item, t_output_buf *const buf)
 	write_pos = ensure(buf, 1);
 	if (!write_pos)
 		return (-1);
-	*write_pos = '[';
+	*write_pos = '{';
+	if (generate_new_line(buf) != 0)
+		return (-1);
 	++buf->offset;
-	if (generate_elements(item, buf) != 0)
+	if (generate_members(item, buf) != 0)
 		return (-1);
 	write_pos = ensure(buf, 2);
 	if (!write_pos)
 		return (-1);
-	*write_pos++ = ']';
+	*write_pos++ = '}';
 	*write_pos = '\0';
 	--buf->depth;
 	return (0);
 }
 
-static int	generate_elements(t_json const *item, t_output_buf *const buf)
+static int	generate_members(t_json const *item, t_output_buf *const buf)
 {
-	t_json_array	*cur;
+	t_json_object	*cur;
 
-	cur = item->_.array_data;
+	cur = item->_.object_data;
 	while (cur)
 	{
-		if (generate_value(cur->element, buf) != 0)
+		if (generate_string_ptr(cur->key, buf) != 0)
+			return (-1);
+		if (generate_colon(buf) != 0)
+			return (-1);
+		if (generate_value(cur->value, buf) != 0)
 			return (-1);
 		update_offset(buf);
 		if (cur->next)
 			if (generate_comma(buf) != 0)
 				return (-1);
+		if (generate_new_line(buf) != 0)
+			return (-1);
 		cur = cur->next;
 	}
 	return (0);
 }
 
-int	generate_comma(t_output_buf *const buf)
+static int	generate_new_line(t_output_buf *const buf)
+{
+	char	*write_pos;
+
+	if (!buf->is_formatted)
+		return (0);
+	write_pos = ensure(buf, 1);
+	if (!write_pos)
+		return (-1);
+	*write_pos++ = '\n';
+	*write_pos = '\0';
+	buf->offset += 1;
+	return (0);
+}
+
+static int	generate_colon(t_output_buf *const buf)
 {
 	char	*write_pos;
 	size_t	length;
@@ -73,7 +99,7 @@ int	generate_comma(t_output_buf *const buf)
 	write_pos = ensure(buf, length + 1);
 	if (!write_pos)
 		return (-1);
-	*write_pos++ = ',';
+	*write_pos++ = ':';
 	if (buf->is_formatted)
 		*write_pos++ = ' ';
 	*write_pos = '\0';
