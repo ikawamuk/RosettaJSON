@@ -6,10 +6,12 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 00:13:58 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 00:14:13 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:15:53 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+#include <string.h>
 #include "json.h"
 
 t_json	*json_new_item(void)

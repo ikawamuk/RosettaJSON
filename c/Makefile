@@ -6,7 +6,7 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/09/02 20:04:19 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/03 09:23:40 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ OBJ_DIR		:= obj
 
 CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror
+LDLIBS 		:= -lm
 CPPFLAGS	:= -I $(INC_DIR) -MMD -MP
 AR			:= ar
 ARFLAGS		:= rcs
@@ -29,6 +30,7 @@ RM			:= rm -f
 SRCS		:= \
 	$(SRC_DIR)/json_delete.c \
 	$(SRC_DIR)/json_parse/json_parse.c \
+	$(SRC_DIR)/json_parse/json_new_item.c \
 	$(SRC_DIR)/json_parse/json_error.c \
 	$(SRC_DIR)/json_parse/parse_buf.c \
 	$(SRC_DIR)/json_parse/parse_null.c \
@@ -36,11 +38,33 @@ SRCS		:= \
 	$(SRC_DIR)/json_parse/parse_false.c \
 	$(SRC_DIR)/json_parse/parse_number.c \
 	$(SRC_DIR)/json_parse/parse_string.c \
+	$(SRC_DIR)/json_parse/json_array.c \
+	$(SRC_DIR)/json_parse/parse_array.c \
+	$(SRC_DIR)/json_parse/json_object.c \
+	$(SRC_DIR)/json_parse/parse_object.c \
+	$(SRC_DIR)/json_generate/json_generate.c \
+	$(SRC_DIR)/json_generate/output_buf.c \
 	$(SRC_DIR)/json_generate/json_generate.c \
 	$(SRC_DIR)/json_generate/output_buf.c \
 	$(SRC_DIR)/json_generate/generate_null.c \
 	$(SRC_DIR)/json_generate/generate_true.c \
-	$(SRC_DIR)/json_generate/generate_false.c
+	$(SRC_DIR)/json_generate/generate_false.c \
+	$(SRC_DIR)/json_generate/generate_number.c \
+	$(SRC_DIR)/json_generate/generate_string.c \
+	$(SRC_DIR)/json_generate/generate_string_ptr.c \
+	$(SRC_DIR)/json_generate/generate_array.c \
+	$(SRC_DIR)/json_generate/generate_object.c \
+	$(SRC_DIR)/json_access/json_is_null.c \
+	$(SRC_DIR)/json_access/json_is_true.c \
+	$(SRC_DIR)/json_access/json_is_false.c \
+	$(SRC_DIR)/json_access/json_is_number.c \
+	$(SRC_DIR)/json_access/json_is_string.c \
+	$(SRC_DIR)/json_access/json_is_array.c \
+	$(SRC_DIR)/json_access/json_is_object.c \
+	$(SRC_DIR)/json_access/json_get_number.c \
+	$(SRC_DIR)/json_access/json_get_string.c \
+	$(SRC_DIR)/json_access/json_get_array.c \
+	$(SRC_DIR)/json_access/json_get_object.c \
 
 TEST_SRCS := $(wildcard src/test/*.c)
 TEST_OBJS := $(TEST_SRCS:src/test/%.c=obj/test_%.o)
@@ -59,7 +83,7 @@ $(NAME): $(OBJS)
 
 # main.c をリンクした動作確認用の実行ファイル
 $(TEST_NAME): $(TEST_OBJS) $(NAME)
-	$(CC) $(CFLAGS) $(TEST_OBJS) $(NAME) -o $@
+	$(CC) $(CFLAGS) $(TEST_OBJS) $(NAME) -o $@ $(LDLIBS)
 
 test: $(TEST_NAME)
 
@@ -78,13 +102,6 @@ fclean: clean
 	$(RM) $(NAME) $(TEST_NAME) $(TEST_TARGET)
 
 re: fclean all
-
-test: $(TEST_TARGET)
-	@echo "--- Running Tests ---"
-	./$(TEST_TARGET)
-
-$(TEST_TARGET): $(TEST_OBJS) libjson.a
-	$(CC) $(TEST_OBJS) -L. -ljson $(LDFLAGS) -o $@
 
 -include $(DEPS)
 

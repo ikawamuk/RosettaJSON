@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:44:19 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:04:56 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include "json_error.h"
 #include "parse_buf.h"
 
-static int		update_cur_node(t_json_array **cur, t_parse_buf *const buf);
-static int		unclosed_brackets(t_parse_buf *buf);
+static int		parse_array_core(t_json_array **list, t_parse_buf *const buf);
+static int		update_cur_node(t_json_array **cur);
 static int		success(t_json *item, t_parse_buf *buf, t_json_array *head);
 static int		fail(t_parse_buf *buf, t_json_array *array, t_error_code code);
 t_json_array	*json_array_new_element(void);
@@ -57,7 +57,7 @@ static int	parse_array_core(t_json_array **list, t_parse_buf *const buf)
 	cur = *list;
 	while (1)
 	{
-		if (update_cur_node(&cur, buf) != 0)
+		if (update_cur_node(&cur) != 0)
 			return (fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION));
 		++buf->offset;
 		if (parse_value(cur->element, parse_buf_skip_whitespace(buf)) != 0)
@@ -69,7 +69,7 @@ static int	parse_array_core(t_json_array **list, t_parse_buf *const buf)
 	return (0);
 }
 
-static int	update_cur_node(t_json_array **cur, t_parse_buf *const buf)
+static int	update_cur_node(t_json_array **cur)
 {
 	t_json_array	*next;
 
@@ -97,7 +97,7 @@ static int	fail(t_parse_buf *buf, t_json_array *array, t_error_code code)
 static int	success(t_json *item, t_parse_buf *buf, t_json_array *head)
 {
 	--buf->depth;
-	item->type == JSON_Array;
+	item->type = JSON_Array;
 	item->_.array_data = head;
 	++buf->offset;
 	return (0);

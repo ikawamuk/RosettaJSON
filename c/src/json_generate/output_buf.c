@@ -6,10 +6,11 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:34:44 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 02:30:19 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:06:00 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include <stdlib.h>
 #include <limits.h>
 #include "output_buf.h"
@@ -65,7 +66,7 @@ void	update_offset(t_output_buf *const self)
 
 	if (!self || !self->content)
 		return ;
-	head = self->content + self->offset;
+	head = (char *)(self->content + self->offset);
 	self->offset += strlen(head);
 }
 

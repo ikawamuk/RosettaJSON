@@ -6,13 +6,18 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 08:59:32 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:00:09 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:32:51 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include "json.h"
 #include "output_buf.h"
+
+static bool		is_escaped_char(char c);
+static size_t	count_escaped_char(char *s);
+static int		copy_escaped(char *output, char *input, size_t output_length);
+static char		match_literal_character_for_escaped_char(char input);
 
 int	generate_string_ptr(char *str, t_output_buf *const buf)
 {
@@ -33,7 +38,11 @@ int	generate_string_ptr(char *str, t_output_buf *const buf)
 		output[output_length + 2] = '\0';
 		return (0);
 	}
-	return (copy_escaped(output, str, output_length));
+	
+	if (copy_escaped(output, str, output_length) != 0)
+		return (-1);
+	buf->offset += output_length + 2;
+	return (0);
 }
 
 static char	match_literal_character_for_escaped_char(char input)
@@ -43,15 +52,15 @@ static char	match_literal_character_for_escaped_char(char input)
 	if (input == '\"')
 		return ('\"');
 	if (input == '\b')
-		return ('\b');
+		return ('b');
 	if (input == '\f')
-		return ('\f');
+		return ('f');
 	if (input == '\n')
-		return ('\n');
+		return ('n');
 	if (input == '\r')
-		return ('\r');
+		return ('r');
 	if (input == '\t')
-		return ('\t');
+		return ('t');
 	return (-1);
 }
 
@@ -74,6 +83,7 @@ static int	copy_escaped(char *output, char *input, size_t output_length)
 				return (-1);
 		}
 		++out_ptr;
+		++input;
 	}
 	output[output_length + 1] = '\"';
 	output[output_length + 2] = '\0';
@@ -88,12 +98,12 @@ static size_t	count_escaped_char(char *s)
 		return (-1);
 	count = 0;
 	while (*s)
-		if (is_escaped_char(*s))
+		if (is_escaped_char(*s++))
 			++count;
 	return (count);
 }
 
 static bool	is_escaped_char(char c)
 {
-	return (c <= 31 || c == "\"" || c == "\\");
+	return (c <= 31 || c == '\"' || c == '\\');
 }
