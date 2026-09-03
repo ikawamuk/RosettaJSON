@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:05:29 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:38:27 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "parse_buf.h"
 
 static int		parse_object_core(t_json_object **list, t_parse_buf *const buf);
-static int		update_cur_node(t_json_object **cur);
+static int		update_cur_node(t_json_object **list, t_json_object **cur);
 static int		success(t_json *item, t_parse_buf *buf, t_json_object *head);
 static int		fail(t_parse_buf *buf, t_json_object *obj, t_error_code code);
 t_json_object	*json_object_new_member(void);
@@ -58,7 +58,7 @@ static int	parse_object_core(t_json_object **list, t_parse_buf *const buf)
 	cur = *list;
 	while (1)
 	{
-		if (update_cur_node(&cur) != 0)
+		if (update_cur_node(list, &cur) != 0)
 			return (fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION));
 		++buf->offset;
 		if (parse_string(cur->value, parse_buf_skip_whitespace(buf)) != 0)
@@ -78,7 +78,7 @@ static int	parse_object_core(t_json_object **list, t_parse_buf *const buf)
 	return (0);
 }
 
-static int	update_cur_node(t_json_object **cur)
+static int	update_cur_node(t_json_object **list, t_json_object **cur)
 {
 	t_json_object	*next;
 
@@ -86,7 +86,10 @@ static int	update_cur_node(t_json_object **cur)
 	if (!next)
 		return (-1);
 	if (!*cur)
+	{
+		*list = next;
 		*cur = next;
+	}
 	else
 	{
 		(*cur)->next = next;

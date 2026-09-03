@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:34:44 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:06:00 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:48:50 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	output_buf_init(t_output_buf *self, bool is_formatted)
 	self->size = default_buffer_size;
 	self->offset = 0;
 	self->size = 0;
+	self->depth = 0;
 	self->is_formatted = is_formatted;
 	if (!self->content)
 		return (-1);

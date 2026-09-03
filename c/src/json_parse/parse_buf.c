@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:26:05 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/08/30 03:23:49 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:40:58 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void	parse_buf_init(t_parse_buf *self, const char *text)
 	self->depth = 0;
 }
 
+static bool	is_json_whitespace(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
+
 t_parse_buf	*parse_buf_skip_whitespace(t_parse_buf *const buf)
 {
 	if (!buf || !buf->content)
@@ -29,7 +34,7 @@ t_parse_buf	*parse_buf_skip_whitespace(t_parse_buf *const buf)
 	if (!can_access_at_index(buf, 0))
 		return (buf);
 	while (can_access_at_index(buf, 0)
-		&& (parse_buf_at_offset(buf)[0] <= 32))
+		&& is_json_whitespace(parse_buf_at_offset(buf)[0]))
 		buf->offset++;
 	if (buf->offset == buf->length)
 		buf->offset--;

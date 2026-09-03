@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/03 02:20:56 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:55:37 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:49:16 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	generate_array(t_json const *const item, t_output_buf *const buf)
 		return (-1);
 	*write_pos++ = ']';
 	*write_pos = '\0';
+	++buf->offset;
 	--buf->depth;
 	return (0);
 }
