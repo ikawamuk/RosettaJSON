@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:22:02 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 02:26:33 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/03 09:01:19 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int			generate_true(t_json const *const item, t_output_buf *const buf);
 int			generate_false(t_json const *const item, t_output_buf *const buf);
 int			generate_number(t_json const *const item, t_output_buf *const buf);
 int			generate_string(t_json const *const item, t_output_buf *const buf);
+int			generate_array(t_json const *const item, t_output_buf *const buf);
+int			generate_object(t_json const *const item, t_output_buf *const buf);
 
 char	*json_generate(const t_json *item)
 {
@@ -74,6 +76,10 @@ int	generate_value(t_json const *const item, t_output_buf *const buf)
 		return (generate_number(item, buf));
 	if (item->type == JSON_String)
 		return (generate_string(item, buf));
+	if (item->type == JSON_Array)
+		return (generate_array(item, buf));
+	if (item->type == JSON_Object)
+		return (generate_object(item, buf));
 	return (-1);
 }
 
