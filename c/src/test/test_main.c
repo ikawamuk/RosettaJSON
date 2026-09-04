@@ -53,7 +53,7 @@ static char	*read_file_to_buffer(int fd)
 {
 	struct stat	st;
 	char		*buffer;
-	size_t		read_bytes;
+	ssize_t		read_bytes;
 
 	if (fstat(fd, &st) < 0 || !S_ISREG(st.st_mode))
 		return (NULL);

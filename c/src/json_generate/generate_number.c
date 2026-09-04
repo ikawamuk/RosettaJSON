@@ -24,7 +24,7 @@ int	generate_number(t_json const *const item, t_output_buf *const buf)
 {
 	double	d;
 	char	tmp_buffer[26];
-	size_t	length;
+	int		length;
 	char	*write_pos;
 
 	if (!item || !buf)
