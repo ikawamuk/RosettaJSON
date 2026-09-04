@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 13:10:57 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/04 17:29:11 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 17:46:25 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	parse_number(t_json *item, t_parse_buf *const buf)
 	num_str_buf_size = count_valid_number_length(buf);
 	if (num_str_buf_size == (size_t)-1)
 		return (-1);
-	number_c_string = (char *)calloc(sizeof(char), num_str_buf_size);
+	number_c_string = (char *)calloc(sizeof(char), num_str_buf_size + 1);
 	if (!number_c_string)
 	{
 		json_set_error(buf->offset, FAILED_TO_MEMORY_ALLOCATION);
@@ -89,9 +89,9 @@ static size_t count_valid_number_length(t_parse_buf *buf)
 		idx++;
 	if (!can_access_at_index(buf, idx))
 		return (-1);
-	if (is_leading_zero_error(buf, num_str, idx))
-		return (-1);
 	if (!isdigit(num_str[idx]))
+		return (-1);
+	if (is_leading_zero_error(buf, num_str, idx))
 		return (-1);
 	skip_numbers(buf, num_str, &idx);
 	if (can_access_at_index(buf, idx) && num_str[idx] == '.')

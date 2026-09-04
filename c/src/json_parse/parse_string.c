@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 17:54:22 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 23:39:26 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 18:13:11 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ static int	strliteral_to_string(char *output, char **endp, char *literal)
 		return (-1);
 	while (literal[i] != '\"')
 	{
+		if (literal[i] == '\t' || literal[i] == '\n')
+			return (-1);
 		if (literal[i] != '\\')
 			*output++ = literal[i++];
 		else
