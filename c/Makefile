@@ -6,12 +6,11 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/09/03 10:08:10 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/04 16:10:22 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:= libjson.a
-TEST_NAME	:= rosetta_json
 
 INC_DIR		:= include
 SRC_DIR		:= src
@@ -67,9 +66,11 @@ SRCS		:= \
 	$(SRC_DIR)/json_access/json_get_array.c \
 	$(SRC_DIR)/json_access/json_get_object.c \
 
-TEST_SRCS := $(wildcard src/test/*.c)
-TEST_OBJS := $(TEST_SRCS:src/test/%.c=obj/test_%.o)
-TEST_TARGET := rosetta_json_test
+TEST_RUNNER		:= ./src/test/run_test.sh
+TEST_TARGET		:= rosetta_json
+TEST_SRC_DIR	:= src/test
+TEST_SRCS		:= $(TEST_SRC_DIR)/test_main.c
+TEST_SUITE		:= ../JSONTestSuite
 
 OBJS		:= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 TEST_OBJS	:= $(TEST_SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -82,15 +83,19 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $^
 
-# main.c をリンクした動作確認用の実行ファイル
-$(TEST_NAME): $(TEST_OBJS) $(NAME)
+test: $(TEST_TARGET)
+	chmod +x $(TEST_RUNNER)
+	$(TEST_RUNNER)
+
+$(TEST_TARGET): $(TEST_OBJS) $(NAME) $(TEST_SUITE)
 	$(CC) $(CFLAGS) $(TEST_OBJS) $(NAME) -o $@ $(LDLIBS)
 
-test: $(TEST_NAME)
+$(TEST_SUITE):
+	git clone git@github.com:nst/JSONTestSuite.git $@
 
 # デバッグビルド (シンボル + AddressSanitizer)
 debug: CFLAGS += -g3 -fsanitize=address,undefined
-debug: fclean $(TEST_NAME)
+debug: fclean $(TEST_TARGET)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -100,7 +105,7 @@ clean:
 	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME) $(TEST_NAME) $(TEST_TARGET)
+	$(RM) $(NAME) $(TEST_TARGET)
 
 re: fclean all
 

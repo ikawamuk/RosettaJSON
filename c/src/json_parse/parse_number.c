@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 13:10:57 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/02 20:04:45 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 17:29:11 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 #include "json_error.h"
 #include "parse_buf.h"
 
-static size_t	count_num_str_buf_size(t_parse_buf *const buf);
+static bool		is_leading_zero_error(t_parse_buf *buf, char *num_str, size_t idx);
+static size_t	count_valid_number_length(t_parse_buf *buf);
 
 int	parse_number(t_json *item, t_parse_buf *const buf)
 {
@@ -26,7 +27,9 @@ int	parse_number(t_json *item, t_parse_buf *const buf)
 	char	*after_endp;
 	size_t	num_str_buf_size;
 
-	num_str_buf_size = count_num_str_buf_size(buf);
+	num_str_buf_size = count_valid_number_length(buf);
+	if (num_str_buf_size == (size_t)-1)
+		return (-1);
 	number_c_string = (char *)calloc(sizeof(char), num_str_buf_size);
 	if (!number_c_string)
 	{
@@ -48,20 +51,58 @@ int	parse_number(t_json *item, t_parse_buf *const buf)
 	return (0);
 }
 
-static size_t	count_num_str_buf_size(t_parse_buf *const buf)
+static bool	is_leading_zero_error(t_parse_buf *buf, char *num_str, size_t idx)
 {
-	size_t	size;
-	char	c;
+	if (num_str[idx] != '0')
+		return (false);
+	if (can_access_at_index(buf, idx + 1) && isdigit(num_str[idx + 1]))
+		return (true);
+	return (false);
+}
 
-	size = 0;
-	while (can_access_at_index(buf, size))
+static void	skip_numbers(t_parse_buf *buf, char *num_str, size_t *idx_p)
+{
+	while (can_access_at_index(buf, *idx_p) && isdigit(num_str[*idx_p]))
+		(*idx_p)++;
+}
+
+static int	skip_exponent_part(t_parse_buf *buf, char *num_str, size_t *idx_p)
+{
+	(*idx_p)++;
+	if (can_access_at_index(buf, (*idx_p))
+		&& (num_str[(*idx_p)] == '+' || num_str[(*idx_p)] == '-'))
+		(*idx_p)++;
+	if (!can_access_at_index(buf, (*idx_p)) || !isdigit(num_str[(*idx_p)]))
+		return (-1);
+	skip_numbers(buf, num_str, &(*idx_p));
+	return (0);
+}
+
+static size_t count_valid_number_length(t_parse_buf *buf)
+{
+	size_t	idx;
+	char	*num_str;
+
+	idx = 0;
+	num_str = parse_buf_at_offset(buf);
+	if (can_access_at_index(buf, idx) && num_str[idx] == '-')
+		idx++;
+	if (!can_access_at_index(buf, idx))
+		return (-1);
+	if (is_leading_zero_error(buf, num_str, idx))
+		return (-1);
+	if (!isdigit(num_str[idx]))
+		return (-1);
+	skip_numbers(buf, num_str, &idx);
+	if (can_access_at_index(buf, idx) && num_str[idx] == '.')
 	{
-		c = parse_buf_at_offset(buf)[size];
-		if (isdigit(c) || c == '.' || c == '-'
-			|| c == '+' || c == 'E' || c == 'e')
-			size++;
-		else
-			break ;
+		idx++;
+		if (!can_access_at_index(buf, idx) || !isdigit(num_str[idx]))
+			return (-1);
+		skip_numbers(buf, num_str, &idx);
 	}
-	return (size + 1);
+	if (can_access_at_index(buf, idx) && (num_str[idx] == 'e' || num_str[idx] == 'E'))
+		if (skip_exponent_part(buf, num_str, &idx) != 0)
+			return (-1);
+	return (idx);
 }

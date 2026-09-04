@@ -6,26 +6,28 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 07:56:32 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 16:13:28 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "json.h"
 #include "json_error.h"
 #include "parse_buf.h"
 
-int		parse_value(t_json *item, t_parse_buf *const buf);
-t_json	*json_new_item(void);
-int		parse_true(t_json *item, t_parse_buf *const buf);
-int		parse_false(t_json *item, t_parse_buf *const buf);
-int		parse_null(t_json *item, t_parse_buf *const buf);
-int		parse_number(t_json *item, t_parse_buf *const buf);
-int		parse_string(t_json *item, t_parse_buf *const buf);
-int		parse_array(t_json *item, t_parse_buf *const buf);
-int		parse_object(t_json *item, t_parse_buf *const buf);
+static bool	parse_buf_is_eof(t_parse_buf *buf);
+int			parse_value(t_json *item, t_parse_buf *const buf);
+t_json		*json_new_item(void);
+int			parse_true(t_json *item, t_parse_buf *const buf);
+int			parse_false(t_json *item, t_parse_buf *const buf);
+int			parse_null(t_json *item, t_parse_buf *const buf);
+int			parse_number(t_json *item, t_parse_buf *const buf);
+int			parse_string(t_json *item, t_parse_buf *const buf);
+int			parse_array(t_json *item, t_parse_buf *const buf);
+int			parse_object(t_json *item, t_parse_buf *const buf);
 
 t_json	*json_parse(const char *json_text)
 {
@@ -47,6 +49,8 @@ t_json	*json_parse(const char *json_text)
 		json_delete(item);
 		return (NULL);
 	}
+	if (!parse_buf_is_eof(&buffer))
+		return (NULL);
 	return (item);
 }
 
@@ -73,4 +77,9 @@ int	parse_value(t_json *item, t_parse_buf *const buf)
 		return (parse_object(item, buf));
 	json_set_error(buf->offset, INVALID_TOKEN);
 	return (-1);
+}
+
+static bool	parse_buf_is_eof(t_parse_buf *buf)
+{
+	return (buf->offset >= buf->length);
 }
