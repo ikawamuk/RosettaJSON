@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:21:17 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/04 16:13:28 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 17:38:07 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,13 @@ t_json	*json_parse(const char *json_text)
 		json_delete(item);
 		return (NULL);
 	}
+	parse_buf_skip_whitespace(&buffer);
 	if (!parse_buf_is_eof(&buffer))
+	{
+		json_delete(item);
+		json_set_error(0, TRAILING_GARBAGE);
 		return (NULL);
+	}
 	return (item);
 }
 

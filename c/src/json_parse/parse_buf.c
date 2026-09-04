@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 02:26:05 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/04 16:21:27 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 17:40:22 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ t_parse_buf	*parse_buf_skip_whitespace(t_parse_buf *const buf)
 	while (can_access_at_index(buf, 0)
 		&& is_json_whitespace(parse_buf_at_offset(buf)[0]))
 		buf->offset++;
-	if (buf->offset == buf->length)
-		buf->offset--;
+	// if (buf->offset == buf->length)
+	// 	buf->offset--;
 	return (buf);
 }
 

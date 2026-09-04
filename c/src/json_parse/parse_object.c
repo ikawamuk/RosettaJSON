@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 09:51:28 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 17:32:56 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	parse_object_core(t_json_object **list, t_parse_buf *const buf)
 		cur->value->_.string_data = NULL;
 		parse_buf_skip_whitespace(buf);
 		if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ':')
-			break ;
+			return (fail(buf, *list, INVALID_TOKEN));
 		++buf->offset;
 		if (parse_value(cur->value, parse_buf_skip_whitespace(buf)) != 0)
 			return (fail(buf, *list, json_get_error_code()));

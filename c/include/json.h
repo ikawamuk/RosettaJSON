@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:37:25 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 17:38:04 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ typedef enum e_json_error_code
 	NO_ERROR,
 	FAILED_TO_MEMORY_ALLOCATION,
 	INVALID_TOKEN,
-	NESTING_IS_TOO_DEEP
+	NESTING_IS_TOO_DEEP,
+	TRAILING_GARBAGE
 }	t_error_code;
 
 typedef struct s_json_array
