@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/29 22:08:43 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/04 17:38:04 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/04 18:19:56 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_json
 
 /**
  * @brief JSON文字列を解析し、t_jsonオブジェクト構造体を生成します。
- * @param json_text 解析対象のJSON文字列
+ * @param json_text 解析対象のJSON文字列。NULL終端文字列でなければいけない。
  * @return 正常時は生成された t_json へのポインタ。失敗時は NULL
  * @note 戻り値のメモリは不要になったら json_delete() で解放してください。解放の責任は呼び出し元にあります
  */

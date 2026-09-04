@@ -6,7 +6,7 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/09/04 16:10:22 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/04 18:15:23 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ SRCS		:= \
 	$(SRC_DIR)/json_access/json_get_array.c \
 	$(SRC_DIR)/json_access/json_get_object.c \
 
-TEST_RUNNER		:= ./src/test/run_test.sh
+TEST_RUNNER		:= ./run_test.sh
 TEST_TARGET		:= rosetta_json
 TEST_SRC_DIR	:= src/test
 TEST_SRCS		:= $(TEST_SRC_DIR)/test_main.c

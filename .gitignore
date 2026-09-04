@@ -1,4 +1,5 @@
 *
+
 !**/
 
 !.gitignore
@@ -7,4 +8,7 @@
 
 !c/**/*.c
 !c/**/*.h
+!c/run_test.sh
 !c/**/Makefile
+
+JSONTestSuite/
