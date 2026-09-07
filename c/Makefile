@@ -68,7 +68,7 @@ SRCS		:= \
 	$(SRC_DIR)/json_access/json_get_object.c \
 	$(SRC_DIR)/utils/encode_utf8.c \
 	$(SRC_DIR)/utils/hex_to_int.c \
-	$(SRC_DIR)/utils/parse_single_escape_char.c \
+	$(SRC_DIR)/utils/single_escaped_char_util.c \
 
 TEST_RUNNER		:= ./run_test.sh
 TEST_TARGET		:= rosetta_json

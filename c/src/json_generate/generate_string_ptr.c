@@ -14,96 +14,83 @@
 #include "json.h"
 #include "output_buf.h"
 
-static bool		is_escaped_char(char c);
-static size_t	count_escaped_char(char *s);
-static int		copy_escaped(char *output, char *input, size_t output_length);
-static char		match_literal_character_for_escaped_char(char input);
+static size_t	count_literal_length(const char *str);
+static int		string_to_literal(char *dest, const char *src);
+
+int escape_single_char(char unescaped_char, char *out_char);
 
 int	generate_string_ptr(char *str, t_output_buf *const buf)
 {
-	size_t	escaped_char_count;
 	char	*output;
-	size_t	output_length;
+	size_t	literal_length;
 
-	escaped_char_count = count_escaped_char(str);
-	output_length = strlen(str) + escaped_char_count;
-	output = ensure(buf, output_length + 3);
+	literal_length = count_literal_length(str);
+	if (literal_length == (size_t)-1)
+		return (-1);
+	output = ensure(buf, literal_length + 3);
 	if (!output)
 		return (-1);
-	if (escaped_char_count == 0)
-	{
-		output[0] = '\"';
-		memcpy(output + 1, str, output_length);
-		output[output_length + 1] = '\"';
-		output[output_length + 2] = '\0';
-		buf->offset += output_length + 2;
-		return (0);
-	}
-	if (copy_escaped(output, str, output_length) != 0)
+	output[0] = '"';
+	if (string_to_literal(output + 1, str) != 0)
 		return (-1);
-	buf->offset += output_length + 2;
+	output[literal_length + 1] = '"';
+	output[literal_length + 2] = '\0';
+	buf->offset += (literal_length + 2);
 	return (0);
 }
 
-static char	match_literal_character_for_escaped_char(char input)
+static void	generate_utf16_hex(char *out, unsigned char c)
 {
-	if (input == '\\')
-		return ('\\');
-	if (input == '\"')
-		return ('\"');
-	if (input == '\b')
-		return ('b');
-	if (input == '\f')
-		return ('f');
-	if (input == '\n')
-		return ('n');
-	if (input == '\r')
-		return ('r');
-	if (input == '\t')
-		return ('t');
-	return (-1);
+    static const char hex[] = "0123456789abcdef";
+
+    out[0] = '\\';
+    out[1] = 'u';
+    out[2] = '0';
+    out[3] = '0';
+    out[4] = hex[(c >> 4) & 0x0F];
+    out[5] = hex[c & 0x0F];
 }
 
-/* there are unsupported escaped chars & UTF-16 literal is unsupported */
-static int	copy_escaped(char *output, char *input, size_t output_length)
+static int	string_to_literal(char *dest, const char *src)
 {
-	char	*out_ptr;
-
-	output[0] = '\"';
-	out_ptr = output + 1;
-	while (*input)
+	if (!src)
+		return (-1);
+	while (*src)
 	{
-		if (!is_escaped_char(*input))
-			*out_ptr = *input;
-		else
+		if (strchr("\"\\\b\f\n\r\t", *src))
 		{
-			*out_ptr++ = '\\';
-			*out_ptr = match_literal_character_for_escaped_char(*input);
-			if (*out_ptr == (char)-1)
+			*dest++ = '\\';
+			if (escape_single_char(*src++, dest) != 0)
 				return (-1);
+			++dest;
 		}
-		++out_ptr;
-		++input;
+		else if ((unsigned char)*src < 0x20)
+		{
+			generate_utf16_hex(dest, *src++);
+			dest += 6;
+		}
+		else
+			*dest++ = *src++;
 	}
-	output[output_length + 1] = '\"';
-	output[output_length + 2] = '\0';
 	return (0);
 }
 
-static size_t	count_escaped_char(char *s)
+static size_t	count_literal_length(const char *str)
 {
-	size_t	count;
+	size_t	len;
 
-	if (!s)
+	if (!str)
 		return (-1);
-	count = 0;
-	while (*s)
-		if (is_escaped_char(*s++))
-			++count;
-	return (count);
-}
-
-static bool	is_escaped_char(char c)
-{
-	return (c <= 31 || c == '\"' || c == '\\');
+	len = 0;
+	while (*str)
+	{
+		if (strchr("\"\\\b\f\n\r\t", *str))
+			len += 2;
+		else if ((unsigned char)*str < 0x20)
+			len += 6;
+		else
+			++len;
+		++str;
+	}
+	return (len);
 }

@@ -17,7 +17,7 @@ static int  single_escaped(char *out, int *rdbyte, int *wrbyte, char literal);
 static int  normal_char(char *out, int *rdbytes, int *wrbytes, char literal);
 static int  utf16_char(char *output, int *rdbytes, int *wrbytes, char *literal);
 
-int parse_single_escape_char(char escaped_char, char *out_char);
+int unescape_single_char(char escaped_char, char *out_char);
 int hex_to_int(char c);
 int encode_utf8(char *out, unsigned int cp);
 
@@ -49,7 +49,7 @@ static int single_escaped(char *out, int *rdbytes, int *wrbytes, char literal)
 {
     char parsed_char;
 
-    if (parse_single_escape_char(literal, &parsed_char) != 0)
+    if (unescape_single_char(literal, &parsed_char) != 0)
         return (-1);
     *out = parsed_char;
     *rdbytes = 2;
