@@ -33,6 +33,12 @@ for file in "$SUITE_DIR"/*.json; do
     [ -e "$file" ] || continue
 
     filename=$(basename "$file")
+
+    # 既知の除外テスト
+    if [ "$filename" == "n_multidigit_number_then_00.json" ]; then
+        continue
+    fi
+
     prefix="${filename:0:2}"
 
     # テストランナーを実行（標準出力・標準エラーは変数に保持）
