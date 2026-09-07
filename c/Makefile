@@ -10,11 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		:= libjson.a
+BUILD_DIR	:= build
+NAME		:= $(BUILD_DIR)/libjson.a
 
 INC_DIR		:= include
 SRC_DIR		:= src
-OBJ_DIR		:= obj
+TEST_DIR	:= tests
+OBJ_DIR		:= $(BUILD_DIR)/obj
 
 CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror
@@ -72,14 +74,13 @@ SRCS		:= \
 	$(SRC_DIR)/utils/hex_to_int.c \
 	$(SRC_DIR)/utils/single_escaped_char_util.c \
 
-TEST_RUNNER				:= ./test/run_test.sh
-TEST_GENERATE_RUNNER	:= ./test//run_test_generate.sh
-TEST_TRANSFORM_RUNNER	:= ./test//run_test_transform.sh
-TEST_TARGET				:= rosetta_json
-TEST_GENERATE_TARGET	:= rosetta_json_generate
-TEST_SRC_DIR			:= src/test
-TEST_SRCS				:= $(TEST_SRC_DIR)/test_main.c $(TEST_SRC_DIR)/test_util.c
-TEST_GENERATE_SRCS		:= $(TEST_SRC_DIR)/test_generate_main.c $(TEST_SRC_DIR)/test_util.c
+TEST_RUNNER				:= ./$(TEST_DIR)/run_test.sh
+TEST_GENERATE_RUNNER	:= ./$(TEST_DIR)/run_test_generate.sh
+TEST_TRANSFORM_RUNNER	:= ./$(TEST_DIR)/run_test_transform.sh
+TEST_TARGET				:= $(BUILD_DIR)/rosetta_json
+TEST_GENERATE_TARGET	:= $(BUILD_DIR)/rosetta_json_generate
+TEST_SRCS				:= $(TEST_DIR)/test_main.c $(TEST_DIR)/test_util.c
+TEST_GENERATE_SRCS		:= $(TEST_DIR)/test_generate_main.c $(TEST_DIR)/test_util.c
 TEST_SUITE				:= ../JSONTestSuite
 
 OBJS		:= $(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -92,6 +93,7 @@ DEPS		:= $(sort $(OBJS:.o=.d) $(TEST_OBJS:.o=.d) $(TEST_GENERATE_OBJS:.o=.d))
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	@mkdir -p $(dir $@)
 	$(AR) $(ARFLAGS) $@ $^
 
 test: $(TEST_TARGET)
@@ -112,9 +114,11 @@ test-all:
 	-$(MAKE) test-transform
 
 $(TEST_TARGET): $(TEST_OBJS) $(NAME) $(TEST_SUITE)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(TEST_OBJS) $(NAME) -o $@ $(LDLIBS)
 
 $(TEST_GENERATE_TARGET): $(TEST_GENERATE_OBJS) $(NAME) $(TEST_SUITE)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(TEST_GENERATE_OBJS) $(NAME) -o $@ $(LDLIBS)
 
 $(TEST_SUITE):
@@ -141,8 +145,8 @@ check-symbols: $(NAME)
 clean:
 	$(RM) -r $(OBJ_DIR)
 
-fclean: clean
-	$(RM) $(NAME) $(TEST_TARGET) $(TEST_GENERATE_TARGET)
+fclean:
+	$(RM) -r $(BUILD_DIR)
 
 re: fclean all
 

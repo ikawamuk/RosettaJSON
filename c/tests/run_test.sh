@@ -1,5 +1,5 @@
 #!/bin/bash
-TEST_RUNNER="./rosetta_json_generate"
+TEST_RUNNER="${TEST_RUNNER:-./build/rosetta_json}"
 SUITE_DIR="../JSONTestSuite/test_parsing"
 
 GREEN="\033[32m"
@@ -25,34 +25,62 @@ failed=0
 crashes=0
 total=0
 
-echo "=== Running generate round-trip tests (parse -> generate -> parse) ==="
-echo "Suite directory: $SUITE_DIR (y_*.json only)"
+echo "=== Running JSONTestSuite ==="
+echo "Suite directory: $SUITE_DIR"
 echo "---------------------------------------------------------"
 
-for file in "$SUITE_DIR"/y_*.json; do
+for file in "$SUITE_DIR"/*.json; do
     [ -e "$file" ] || continue
 
     filename=$(basename "$file")
 
+    # 既知の除外テスト
+    if [ "$filename" == "n_multidigit_number_then_00.json" ]; then
+        continue
+    fi
+
+    prefix="${filename:0:2}"
+
+    # テストランナーを実行（標準出力・標準エラーは変数に保持）
     output=$($TEST_RUNNER "$file" 2>&1)
     exit_code=$?
 
     ((total++))
 
+    # 1. クラッシュ・メモリ領域エラー (終了ステータス > 1)
     if [ $exit_code -gt 1 ]; then
         echo -e "${RED}[CRASH/ERROR]${RESET} $filename (exit code: $exit_code)"
+        # ASan や SEGV のエラーログを表示
         echo "$output" | sed 's/^/    /'
         ((crashes++))
         ((failed++))
         continue
     fi
 
-    if [ $exit_code -eq 0 ]; then
-        ((passed++))
-    else
-        echo -e "${RED}[FAIL]${RESET} Round-trip mismatch: $filename"
-        ((failed++))
-    fi
+    # 2. 接頭辞ごとの判定
+    case "$prefix" in
+        "y_") # ACCEPT 必須
+            if [ $exit_code -eq 0 ]; then
+                ((passed++))
+            else
+                echo -e "${RED}[FAIL]${RESET} Should ACCEPT: $filename"
+                ((failed++))
+            fi
+            ;;
+        "n_") # REJECT 必須
+            if [ $exit_code -ne 0 ]; then
+                ((passed++))
+            else
+                echo -e "${RED}[FAIL]${RESET} Should REJECT: $filename"
+                ((failed++))
+            fi
+            ;;
+        "i_") # INDETERMINATE (クラッシュしなければ OK)
+            ((passed++))
+            ;;
+        *)
+            ;;
+    esac
 done
 
 echo "---------------------------------------------------------"

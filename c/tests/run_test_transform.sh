@@ -4,8 +4,8 @@
 # そのためここでは「クラッシュしないこと」だけを合否判定に使い、
 # 各ファイルに対する実際の挙動 (accept/reject, generate結果とのラウンドトリップ) は
 # 参考情報としてログ出力するだけに留める。
-TEST_RUNNER="./rosetta_json"
-GEN_RUNNER="./rosetta_json_generate"
+TEST_RUNNER="${TEST_RUNNER:-./build/rosetta_json}"
+GEN_RUNNER="${GEN_RUNNER:-./build/rosetta_json_generate}"
 SUITE_DIR="../JSONTestSuite/test_transform"
 
 GREEN="\033[32m"
