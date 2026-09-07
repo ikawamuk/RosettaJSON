@@ -38,6 +38,7 @@ SRCS		:= \
 	$(SRC_DIR)/json_parse/parse_false.c \
 	$(SRC_DIR)/json_parse/parse_number.c \
 	$(SRC_DIR)/json_parse/parse_string.c \
+	$(SRC_DIR)/json_parse/parse_char.c \
 	$(SRC_DIR)/json_parse/json_array.c \
 	$(SRC_DIR)/json_parse/parse_array.c \
 	$(SRC_DIR)/json_parse/json_object.c \
@@ -65,6 +66,9 @@ SRCS		:= \
 	$(SRC_DIR)/json_access/json_get_string.c \
 	$(SRC_DIR)/json_access/json_get_array.c \
 	$(SRC_DIR)/json_access/json_get_object.c \
+	$(SRC_DIR)/utils/encode_utf8.c \
+	$(SRC_DIR)/utils/hex_to_int.c \
+	$(SRC_DIR)/utils/parse_single_escape_char.c \
 
 TEST_RUNNER		:= ./run_test.sh
 TEST_TARGET		:= rosetta_json

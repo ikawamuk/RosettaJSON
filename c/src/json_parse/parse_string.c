@@ -15,22 +15,23 @@
 #include "json_error.h"
 #include "parse_buf.h"
 
-static size_t	count_output_string_length(t_parse_buf *const buf);
+static size_t	count_input_string_length(t_parse_buf *const buf);
 static int		strliteral_to_string(char *output, char **endp, char *literal);
+int				parse_char(char *output, int *read, int *written, char *liter);
 
 int	parse_string(t_json *item, t_parse_buf *const buf)
 {
 	char	*output;
 	char	*buf_endp;
-	size_t	output_len;
+	size_t  max_len;
 
-	output_len = count_output_string_length(buf);
-	if (output_len == (size_t)-1)
+	max_len = count_input_string_length(buf);
+	if (max_len == (size_t)-1)
 	{
 		json_set_error(buf->offset, INVALID_TOKEN);
 		return (-1);
 	}
-	output = calloc(sizeof(char), output_len + 1);
+	output = calloc(sizeof(char), max_len + 1);
 	if (!output)
 	{
 		json_set_error(buf->offset, FAILED_TO_MEMORY_ALLOCATION);
@@ -38,6 +39,7 @@ int	parse_string(t_json *item, t_parse_buf *const buf)
 	}
 	if (strliteral_to_string(output, &buf_endp, parse_buf_at_offset(buf)) != 0)
 	{
+		free(output);
 		json_set_error(buf->offset, INVALID_TOKEN);
 		return (-1);
 	}
@@ -47,77 +49,51 @@ int	parse_string(t_json *item, t_parse_buf *const buf)
 	return (0);
 }
 
-static char	match_escaped_char(char *escaped_str)
-{
-	if (escaped_str[0] != '\\')
-		return (-1);
-	if (escaped_str[1] == 'b')
-		return ('\b');
-	if (escaped_str[1] == 'f')
-		return ('\f');
-	if (escaped_str[1] == 'n')
-		return ('\n');
-	if (escaped_str[1] == 'r')
-		return ('\r');
-	if (escaped_str[1] == 't')
-		return ('\t');
-	if (escaped_str[1] == '\"'
-		|| escaped_str[1] == '\\' || escaped_str[1] == '/')
-		return (escaped_str[1]);
-	return (-1);
-}
-
-/* UTF-16 literal is unsupported */
 static int	strliteral_to_string(char *output, char **endp, char *literal)
 {
-	size_t	i;
-	char	c;
+	int read_bytes;
+    int written_bytes;
 
-	i = 0;
-	if (literal[i++] != '\"')
+	if (!literal || *literal != '"')
 		return (-1);
-	while (literal[i] != '\"')
+	++literal;
+	while (*literal && *literal != '"')
 	{
-		if (literal[i] == '\t' || literal[i] == '\n')
+		if (parse_char(output, &read_bytes, &written_bytes, literal) != 0)
 			return (-1);
-		if (literal[i] != '\\')
-			*output++ = literal[i++];
-		else
-		{
-			c = match_escaped_char(literal + i);
-			if (c == -1)
-				return (-1);
-			*output++ = c;
-			i += 2;
-		}
+		if (read_bytes <= 0)
+            return (-1);
+		literal += read_bytes;
+		output += written_bytes;
 	}
-	*endp = literal + i + 1;
+	if (*literal != '"')
+        return (-1);
+	++literal;
+	*output = '\0';
+	*endp = literal;
 	return (0);
 }
 
-static size_t	count_output_string_length(t_parse_buf *const buf)
+static size_t	count_input_string_length(t_parse_buf *const buf)
 {
 	size_t	i;
-	size_t	skipped_bytes;
 	char	*literal_head;
 
-	literal_head = parse_buf_at_offset(buf) + 1;
-	if (parse_buf_at_offset(buf)[0] != '\"')
+	if (parse_buf_at_offset(buf)[0] != '"')
 		return (-1);
+	literal_head = parse_buf_at_offset(buf) + 1;
 	i = 0;
-	skipped_bytes = 0;
-	while (can_access_at_index(buf, i) && literal_head[i] != '\"')
+	while (can_access_at_index(buf, i + 1) && literal_head[i] != '"')
 	{
 		if (literal_head[i] == '\\')
 		{
-			if (i + 1 >= buf->length)
-				return (-1);
 			++i;
-			++skipped_bytes;
+			if (!can_access_at_index(buf, i + 1))
+				return (-1);
 		}
 		++i;
 	}
-	if (!can_access_at_index(buf, i) || literal_head[i] != '\"')
+	if (!can_access_at_index(buf, i + 1) || literal_head[i] != '\"')
 		return (-1);
-	return (i - skipped_bytes);
-}
+	return (i);
+} 
