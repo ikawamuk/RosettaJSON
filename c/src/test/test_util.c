@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "test_util.h"
+#include "rosetta_json/json.h"
 
 static bool	array_equals(t_json_array const *a, t_json_array const *b);
 static bool	object_equals(t_json_object const *a, t_json_object const *b);

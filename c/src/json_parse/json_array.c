@@ -12,9 +12,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "json.h"
+#include "internal.h"
 
-t_json_array	*json_array_new_element(void)
+t_json_array	*rj_array_new_element(void)
 {
 	t_json_array	*array_node;
 
@@ -32,11 +32,11 @@ t_json_array	*json_array_new_element(void)
 	return (array_node);
 }
 
-void	json_array_delete(t_json_array *array)
+void	rj_array_delete(t_json_array *array)
 {
 	if (!array)
 		return ;
 	json_delete(array->element);
-	json_array_delete(array->next);
+	rj_array_delete(array->next);
 	free(array);
 }

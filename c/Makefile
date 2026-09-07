@@ -6,7 +6,7 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/09/04 18:15:23 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/08 07:36:41 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ OBJ_DIR		:= obj
 CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror
 LDLIBS 		:= -lm
-CPPFLAGS	:= -I $(INC_DIR) -MMD -MP
+CPPFLAGS	:= -I $(INC_DIR) -I $(SRC_DIR) -MMD -MP
 AR			:= ar
 ARFLAGS		:= rcs
 RM			:= rm -f
@@ -32,6 +32,7 @@ SRCS		:= \
 	$(SRC_DIR)/json_parse/json_new_item.c \
 	$(SRC_DIR)/json_parse/json_error.c \
 	$(SRC_DIR)/json_parse/parse_buf.c \
+	$(SRC_DIR)/json_parse/parse_buf_peek.c \
 	$(SRC_DIR)/json_parse/is_json_whitespace.c \
 	$(SRC_DIR)/json_parse/parse_null.c \
 	$(SRC_DIR)/json_parse/parse_true.c \
@@ -71,15 +72,15 @@ SRCS		:= \
 	$(SRC_DIR)/utils/hex_to_int.c \
 	$(SRC_DIR)/utils/single_escaped_char_util.c \
 
-TEST_RUNNER		:= ./run_test.sh
-TEST_GENERATE_RUNNER	:= ./run_test_generate.sh
-TEST_TRANSFORM_RUNNER	:= ./run_test_transform.sh
-TEST_TARGET		:= rosetta_json
+TEST_RUNNER				:= ./test/run_test.sh
+TEST_GENERATE_RUNNER	:= ./test//run_test_generate.sh
+TEST_TRANSFORM_RUNNER	:= ./test//run_test_transform.sh
+TEST_TARGET				:= rosetta_json
 TEST_GENERATE_TARGET	:= rosetta_json_generate
-TEST_SRC_DIR	:= src/test
-TEST_SRCS		:= $(TEST_SRC_DIR)/test_main.c $(TEST_SRC_DIR)/test_util.c
-TEST_GENERATE_SRCS	:= $(TEST_SRC_DIR)/test_generate_main.c $(TEST_SRC_DIR)/test_util.c
-TEST_SUITE		:= ../JSONTestSuite
+TEST_SRC_DIR			:= src/test
+TEST_SRCS				:= $(TEST_SRC_DIR)/test_main.c $(TEST_SRC_DIR)/test_util.c
+TEST_GENERATE_SRCS		:= $(TEST_SRC_DIR)/test_generate_main.c $(TEST_SRC_DIR)/test_util.c
+TEST_SUITE				:= ../JSONTestSuite
 
 OBJS		:= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 TEST_OBJS	:= $(TEST_SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -127,6 +128,16 @@ $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
+# libjson.a が公開する記号を json_ (公開API) と rj_ (内部) だけに保つ
+check-symbols: $(NAME)
+	@leaked=$$(nm $(NAME) | awk '$$2 == "T" {print $$3}' \
+		| grep -v '^json_' | grep -v '^rj_'); \
+	if [ -n "$$leaked" ]; then \
+		echo "prefix のない公開記号:"; echo "$$leaked" | sed 's/^/  /'; \
+		exit 1; \
+	fi; \
+	echo "OK: 全記号が json_ / rj_ prefix に準拠"
+
 clean:
 	$(RM) -r $(OBJ_DIR)
 
@@ -137,4 +148,5 @@ re: fclean all
 
 -include $(DEPS)
 
-.PHONY: all test test-generate test-transform test-all debug clean fclean re
+.PHONY: all test test-generate test-transform test-all check-symbols debug \
+	clean fclean re

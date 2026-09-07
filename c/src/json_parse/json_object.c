@@ -12,11 +12,9 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "json.h"
+#include "internal.h"
 
-t_json	*json_new_item(void);
-
-t_json_object	*json_object_new_member(void)
+t_json_object	*rj_object_new_member(void)
 {
 	t_json_object	*member;
 
@@ -24,7 +22,7 @@ t_json_object	*json_object_new_member(void)
 	if (!member)
 		return (NULL);
 	memset(member, 0, sizeof(t_json));
-	member->value = json_new_item();
+	member->value = rj_new_item();
 	if (!member->value)
 	{
 		free(member);
@@ -33,17 +31,17 @@ t_json_object	*json_object_new_member(void)
 	return (member);
 }
 
-void	json_object_delete(t_json_object *object)
+void	rj_object_delete(t_json_object *object)
 {
 	if (!object)
 		return ;
 	free(object->key);
 	json_delete(object->value);
-	json_object_delete(object->next);
+	rj_object_delete(object->next);
 	free(object);
 }
 
-void	json_object_merge_duplicate(t_json_object *list, t_json_object **cur)
+void	rj_object_merge_duplicate(t_json_object *list, t_json_object **cur)
 {
 	t_json_object	*dup;
 	t_json_object	*prev;
@@ -62,6 +60,6 @@ void	json_object_merge_duplicate(t_json_object *list, t_json_object **cur)
 	dup->value = (*cur)->value;
 	(*cur)->value = NULL;
 	prev->next = NULL;
-	json_object_delete(*cur);
+	rj_object_delete(*cur);
 	*cur = prev;
 }

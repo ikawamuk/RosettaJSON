@@ -11,15 +11,12 @@
 /* ************************************************************************** */
 
 #include <string.h>
-#include "json.h"
-#include "output_buf.h"
+#include "internal.h"
 
 static size_t	count_literal_length(const char *str);
 static int		string_to_literal(char *dest, const char *src);
 
-int				escape_single_char(char unescaped_char, char *out_char);
-
-int	generate_string_ptr(char *str, t_output_buf *const buf)
+int	rj_generate_string_ptr(char *str, t_output_buf *const buf)
 {
 	char	*output;
 	size_t	literal_length;
@@ -27,7 +24,7 @@ int	generate_string_ptr(char *str, t_output_buf *const buf)
 	literal_length = count_literal_length(str);
 	if (literal_length == (size_t)-1)
 		return (-1);
-	output = ensure(buf, literal_length + 3);
+	output = rj_ensure(buf, literal_length + 3);
 	if (!output)
 		return (-1);
 	output[0] = '"';
@@ -60,7 +57,7 @@ static int	string_to_literal(char *dest, const char *src)
 		if (strchr("\"\\\b\f\n\r\t", *src))
 		{
 			*dest++ = '\\';
-			if (escape_single_char(*src++, dest) != 0)
+			if (rj_escape_single_char(*src++, dest) != 0)
 				return (-1);
 			++dest;
 		}

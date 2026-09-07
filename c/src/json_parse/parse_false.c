@@ -11,16 +11,14 @@
 /* ************************************************************************** */
 
 #include <string.h>
-#include "json.h"
-#include "json_error.h"
-#include "parse_buf.h"
+#include "internal.h"
 
-int	parse_false(t_json *item, t_parse_buf *const buf)
+int	rj_parse_false(t_json *item, t_parse_buf *const buf)
 {
-	if (!can_read_n_bytes(buf, 5)
-		|| strncmp((const char *)parse_buf_at_offset(buf), "false", 5) != 0)
+	if (!rj_can_read_n_bytes(buf, 5)
+		|| strncmp((const char *)rj_parse_buf_at_offset(buf), "false", 5) != 0)
 	{
-		json_set_error(buf->offset, INVALID_TOKEN);
+		rj_set_error(buf->offset, INVALID_TOKEN);
 		return (-1);
 	}
 	item->type = JSON_False;

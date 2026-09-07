@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	hex_to_int(char c)
+#include "internal.h"
+
+int	rj_hex_to_int(char c)
 {
 	if (c >= '0' && c <= '9')
 		return (c - '0');

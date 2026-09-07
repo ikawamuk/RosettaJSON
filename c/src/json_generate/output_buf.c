@@ -13,11 +13,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "output_buf.h"
+#include "internal.h"
 
 static size_t	calculate_new_buffer_size(size_t needed);
 
-int	output_buf_init(t_output_buf *self, bool is_formatted)
+int	rj_output_buf_init(t_output_buf *self, bool is_formatted)
 {
 	static const size_t	default_buffer_size = 256;
 
@@ -32,7 +32,7 @@ int	output_buf_init(t_output_buf *self, bool is_formatted)
 	return (0);
 }
 
-char	*ensure(t_output_buf *self, size_t needed)
+char	*rj_ensure(t_output_buf *self, size_t needed)
 {
 	char	*new_buf;
 	size_t	new_size;
@@ -61,7 +61,7 @@ char	*ensure(t_output_buf *self, size_t needed)
 	return ((char *)self->content + self->offset);
 }
 
-void	update_offset(t_output_buf *const self)
+void	rj_update_offset(t_output_buf *const self)
 {
 	char	*head;
 

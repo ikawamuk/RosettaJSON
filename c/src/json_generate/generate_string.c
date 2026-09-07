@@ -10,14 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json.h"
-#include "output_buf.h"
+#include "internal.h"
 
-int	generate_string_ptr(char *str, t_output_buf *const buf);
-
-int	generate_string(t_json const *const item, t_output_buf *const buf)
+int	rj_generate_string(t_json const *const item, t_output_buf *const buf)
 {
 	if (!item || !buf)
 		return (-1);
-	return (generate_string_ptr(item->_.string_data, buf));
+	return (rj_generate_string_ptr(item->_.string_data, buf));
 }

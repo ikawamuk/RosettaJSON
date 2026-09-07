@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include <string.h>
-#include "json.h"
+#include "rosetta_json/json.h"
 
 bool	json_has_object_item(t_json const *const object, const char *key)
 {

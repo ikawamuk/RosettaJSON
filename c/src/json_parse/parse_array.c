@@ -10,33 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json.h"
-#include "json_error.h"
-#include "parse_buf.h"
+#include "internal.h"
 
 static int		parse_array_core(t_json_array **list, t_parse_buf *const buf);
 static int		update_cur_node(t_json_array **head, t_json_array **cur);
 static int		success(t_json *item, t_parse_buf *buf, t_json_array *head);
 static int		fail(t_parse_buf *buf, t_json_array *array, t_error_code code);
-t_json_array	*json_array_new_element(void);
-void			json_array_delete(t_json_array *array);
-t_json			*json_new_item(void);
-int				parse_value(t_json *item, t_parse_buf *const buf);
 
-int	parse_array(t_json *item, t_parse_buf *const buf)
+int	rj_parse_array(t_json *item, t_parse_buf *const buf)
 {
 	t_json_array	*tmp_array;
 
 	++buf->depth;
 	if (buf->depth >= JSON_NESTING_LIMIT)
 		return (fail(buf, NULL, NESTING_IS_TOO_DEEP));
-	if (parse_buf_at_offset(buf)[0] != '[')
+	if (rj_parse_buf_at_offset(buf)[0] != '[')
 		return (fail(buf, NULL, INVALID_TOKEN));
 	++buf->offset;
-	parse_buf_skip_whitespace(buf);
-	if (can_access_at_index(buf, 0) && parse_buf_at_offset(buf)[0] == ']')
+	rj_parse_buf_skip_whitespace(buf);
+	if (rj_buf_peek_is(buf, ']'))
 		return (success(item, buf, NULL));
-	if (!can_access_at_index(buf, 0))
+	if (!rj_can_access_at_index(buf, 0))
 	{
 		--buf->offset;
 		return (fail(buf, NULL, INVALID_TOKEN));
@@ -44,7 +38,7 @@ int	parse_array(t_json *item, t_parse_buf *const buf)
 	--buf->offset;
 	if (parse_array_core(&tmp_array, buf) != 0)
 		return (-1);
-	if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ']')
+	if (!rj_buf_peek_is(buf, ']'))
 		return (fail(buf, tmp_array, INVALID_TOKEN));
 	return (success(item, buf, tmp_array));
 }
@@ -60,10 +54,11 @@ static int	parse_array_core(t_json_array **list, t_parse_buf *const buf)
 		if (update_cur_node(list, &cur) != 0)
 			return (fail(buf, *list, FAILED_TO_MEMORY_ALLOCATION));
 		++buf->offset;
-		if (parse_value(cur->element, parse_buf_skip_whitespace(buf)) != 0)
+		if (rj_parse_value(cur->element,
+				rj_parse_buf_skip_whitespace(buf)) != 0)
 			return (fail(buf, *list, json_get_error_code()));
-		parse_buf_skip_whitespace(buf);
-		if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ',')
+		rj_parse_buf_skip_whitespace(buf);
+		if (!rj_buf_peek_is(buf, ','))
 			break ;
 	}
 	return (0);
@@ -73,7 +68,7 @@ static int	update_cur_node(t_json_array **head, t_json_array **cur)
 {
 	t_json_array	*next;
 
-	next = json_array_new_element();
+	next = rj_array_new_element();
 	if (!next)
 		return (-1);
 	if (!*head)
@@ -92,8 +87,8 @@ static int	update_cur_node(t_json_array **head, t_json_array **cur)
 
 static int	fail(t_parse_buf *buf, t_json_array *array, t_error_code code)
 {
-	json_array_delete(array);
-	json_set_error(buf->offset, code);
+	rj_array_delete(array);
+	rj_set_error(buf->offset, code);
 	--buf->depth;
 	return (-1);
 }

@@ -15,8 +15,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "json.h"
 #include "test_util.h"
+#include "rosetta_json/json.h"
 
 int	main(int argc, char *argv[])
 {

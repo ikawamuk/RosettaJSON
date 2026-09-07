@@ -11,11 +11,12 @@
 /* ************************************************************************** */
 
 #include <stddef.h>
+#include "internal.h"
 
 static const char	g_escaped_chars[] = "\"\\/bfntr";
 static const char	g_actual_chars[] = "\"\\/\b\f\n\t\r";
 
-int	unescape_single_char(char escaped_char, char *out_char)
+int	rj_unescape_single_char(char escaped_char, char *out_char)
 {
 	size_t	i;
 
@@ -32,7 +33,7 @@ int	unescape_single_char(char escaped_char, char *out_char)
 	return (-1);
 }
 
-int	escape_single_char(char unescaped_char, char *out_char)
+int	rj_escape_single_char(char unescaped_char, char *out_char)
 {
 	size_t	i;
 

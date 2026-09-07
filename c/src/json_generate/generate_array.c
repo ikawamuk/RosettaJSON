@@ -10,15 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json.h"
-#include "output_buf.h"
+#include "internal.h"
 
 static int	generate_elements(t_json const *item, t_output_buf *const buf);
-int			generate_comma(t_output_buf *const buf);
-int			generate_value(t_json const *const item, t_output_buf *const buf);
-void		update_offset(t_output_buf *const self);
 
-int	generate_array(t_json const *const item, t_output_buf *const buf)
+int	rj_generate_array(t_json const *const item, t_output_buf *const buf)
 {
 	char	*write_pos;
 
@@ -27,14 +23,14 @@ int	generate_array(t_json const *const item, t_output_buf *const buf)
 	if (buf->depth >= JSON_NESTING_LIMIT)
 		return (-1);
 	++buf->depth;
-	write_pos = ensure(buf, 1);
+	write_pos = rj_ensure(buf, 1);
 	if (!write_pos)
 		return (-1);
 	*write_pos = '[';
 	++buf->offset;
 	if (generate_elements(item, buf) != 0)
 		return (-1);
-	write_pos = ensure(buf, 2);
+	write_pos = rj_ensure(buf, 2);
 	if (!write_pos)
 		return (-1);
 	*write_pos++ = ']';
@@ -51,18 +47,18 @@ static int	generate_elements(t_json const *item, t_output_buf *const buf)
 	cur = item->_.array_data;
 	while (cur)
 	{
-		if (generate_value(cur->element, buf) != 0)
+		if (rj_generate_value(cur->element, buf) != 0)
 			return (-1);
-		update_offset(buf);
+		rj_update_offset(buf);
 		if (cur->next)
-			if (generate_comma(buf) != 0)
+			if (rj_generate_comma(buf) != 0)
 				return (-1);
 		cur = cur->next;
 	}
 	return (0);
 }
 
-int	generate_comma(t_output_buf *const buf)
+int	rj_generate_comma(t_output_buf *const buf)
 {
 	char	*write_pos;
 	size_t	length;
@@ -71,7 +67,7 @@ int	generate_comma(t_output_buf *const buf)
 		length = 2;
 	else
 		length = 1;
-	write_pos = ensure(buf, length + 1);
+	write_pos = rj_ensure(buf, length + 1);
 	if (!write_pos)
 		return (-1);
 	*write_pos++ = ',';

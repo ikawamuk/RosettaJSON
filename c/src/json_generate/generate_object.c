@@ -10,19 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json.h"
-#include "output_buf.h"
+#include "internal.h"
 
 static int	generate_members(t_json const *item, t_output_buf *const buf);
 static int	generate_colon(t_output_buf *const buf);
 static int	generate_new_line(t_output_buf *const buf);
 static int	generate_indent(t_output_buf *const buf);
-int			generate_comma(t_output_buf *const buf);
-int			generate_string_ptr(char *str, t_output_buf *const buf);
-int			generate_value(t_json const *const item, t_output_buf *const buf);
-void		update_offset(t_output_buf *const self);
 
-int	generate_object(t_json const *const item, t_output_buf *const buf)
+int	rj_generate_object(t_json const *const item, t_output_buf *const buf)
 {
 	char	*write_pos;
 
@@ -31,7 +26,7 @@ int	generate_object(t_json const *const item, t_output_buf *const buf)
 	if (buf->depth >= JSON_NESTING_LIMIT)
 		return (-1);
 	++buf->depth;
-	write_pos = ensure(buf, 1);
+	write_pos = rj_ensure(buf, 1);
 	if (!write_pos)
 		return (-1);
 	*write_pos = '{';
@@ -43,7 +38,7 @@ int	generate_object(t_json const *const item, t_output_buf *const buf)
 	--buf->depth;
 	if (generate_indent(buf) != 0)
 		return (-1);
-	write_pos = ensure(buf, 2);
+	write_pos = rj_ensure(buf, 2);
 	if (!write_pos)
 		return (-1);
 	*write_pos++ = '}';
@@ -60,15 +55,15 @@ static int	generate_members(t_json const *item, t_output_buf *const buf)
 	{
 		if (generate_indent(buf) != 0)
 			return (0);
-		if (generate_string_ptr(cur->key, buf) != 0)
+		if (rj_generate_string_ptr(cur->key, buf) != 0)
 			return (-1);
 		if (generate_colon(buf) != 0)
 			return (-1);
-		if (generate_value(cur->value, buf) != 0)
+		if (rj_generate_value(cur->value, buf) != 0)
 			return (-1);
-		update_offset(buf);
+		rj_update_offset(buf);
 		if (cur->next)
-			if (generate_comma(buf) != 0)
+			if (rj_generate_comma(buf) != 0)
 				return (-1);
 		if (generate_new_line(buf) != 0)
 			return (-1);
@@ -84,7 +79,7 @@ static int	generate_indent(t_output_buf *const buf)
 
 	if (!buf->is_formatted)
 		return (0);
-	write_pos = ensure(buf, buf->depth);
+	write_pos = rj_ensure(buf, buf->depth);
 	if (!write_pos)
 		return (-1);
 	i = 0;
@@ -103,7 +98,7 @@ static int	generate_new_line(t_output_buf *const buf)
 
 	if (!buf->is_formatted)
 		return (0);
-	write_pos = ensure(buf, 1);
+	write_pos = rj_ensure(buf, 1);
 	if (!write_pos)
 		return (-1);
 	*write_pos++ = '\n';
@@ -121,7 +116,7 @@ static int	generate_colon(t_output_buf *const buf)
 		length = 2;
 	else
 		length = 1;
-	write_pos = ensure(buf, length + 1);
+	write_pos = rj_ensure(buf, length + 1);
 	if (!write_pos)
 		return (-1);
 	*write_pos++ = ':';

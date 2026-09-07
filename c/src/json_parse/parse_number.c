@@ -12,21 +12,18 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "json.h"
-#include "json_error.h"
-#include "parse_buf.h"
+#include "internal.h"
 
-size_t			count_valid_number_length(t_parse_buf *buf);
 static char		*dup_number_string(t_parse_buf *buf, size_t len);
 
-int	parse_number(t_json *item, t_parse_buf *const buf)
+int	rj_parse_number(t_json *item, t_parse_buf *const buf)
 {
 	double	number;
 	char	*number_c_string;
 	char	*after_endp;
 	size_t	num_str_buf_size;
 
-	num_str_buf_size = count_valid_number_length(buf);
+	num_str_buf_size = rj_count_valid_number_length(buf);
 	if (num_str_buf_size == (size_t)-1)
 		return (-1);
 	number_c_string = dup_number_string(buf, num_str_buf_size);
@@ -36,7 +33,7 @@ int	parse_number(t_json *item, t_parse_buf *const buf)
 	if (number_c_string == after_endp)
 	{
 		free(number_c_string);
-		json_set_error(buf->offset, INVALID_TOKEN);
+		rj_set_error(buf->offset, INVALID_TOKEN);
 		return (-1);
 	}
 	item->type = JSON_Number;
@@ -53,9 +50,9 @@ static char	*dup_number_string(t_parse_buf *buf, size_t len)
 	number_c_string = (char *)calloc(sizeof(char), len + 1);
 	if (!number_c_string)
 	{
-		json_set_error(buf->offset, FAILED_TO_MEMORY_ALLOCATION);
+		rj_set_error(buf->offset, FAILED_TO_MEMORY_ALLOCATION);
 		return (NULL);
 	}
-	memmove(number_c_string, parse_buf_at_offset(buf), len);
+	memmove(number_c_string, rj_parse_buf_at_offset(buf), len);
 	return (number_c_string);
 }

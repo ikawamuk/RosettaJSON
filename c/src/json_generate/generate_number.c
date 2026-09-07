@@ -14,13 +14,12 @@
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>
-#include "json.h"
-#include "output_buf.h"
+#include "internal.h"
 
 static bool	is_nun(double n);
 static bool	is_infinity(double n);
 
-int	generate_number(t_json const *const item, t_output_buf *const buf)
+int	rj_generate_number(t_json const *const item, t_output_buf *const buf)
 {
 	double	d;
 	char	tmp_buffer[26];
@@ -39,7 +38,7 @@ int	generate_number(t_json const *const item, t_output_buf *const buf)
 		length = sprintf(tmp_buffer, "%.15g", d);
 	if (length < 0 || length > (int) sizeof(tmp_buffer) - 1)
 		return (-1);
-	write_pos = ensure(buf, length + 1);
+	write_pos = rj_ensure(buf, length + 1);
 	if (!write_pos)
 		return (-1);
 	strcpy(write_pos, tmp_buffer);

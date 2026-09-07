@@ -11,11 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "json.h"
-#include "json_error.h"
-
-void	json_array_delete(t_json_array *array);
-void	json_object_delete(t_json_object *object);
+#include "internal.h"
 
 void	json_delete(t_json *item)
 {
@@ -24,9 +20,9 @@ void	json_delete(t_json *item)
 	if (item->type == JSON_String)
 		free(item->_.string_data);
 	else if (item->type == JSON_Array)
-		json_array_delete(item->_.array_data);
+		rj_array_delete(item->_.array_data);
 	else if (item->type == JSON_Object)
-		json_object_delete(item->_.object_data);
+		rj_object_delete(item->_.object_data);
 	free(item);
 	return ;
 }

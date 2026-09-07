@@ -12,11 +12,9 @@
 
 #include <string.h>
 #include <stdbool.h>
-#include "parse_buf.h"
+#include "internal.h"
 
-bool	is_json_whitespace(char c);
-
-void	parse_buf_init(t_parse_buf *self, const char *text)
+void	rj_parse_buf_init(t_parse_buf *self, const char *text)
 {
 	self->content = (const unsigned char *)text;
 	self->length = strlen(text);
@@ -24,33 +22,33 @@ void	parse_buf_init(t_parse_buf *self, const char *text)
 	self->depth = 0;
 }
 
-t_parse_buf	*parse_buf_skip_whitespace(t_parse_buf *const buf)
+t_parse_buf	*rj_parse_buf_skip_whitespace(t_parse_buf *const buf)
 {
 	if (!buf || !buf->content)
 		return (NULL);
-	if (!can_access_at_index(buf, 0))
+	if (!rj_can_access_at_index(buf, 0))
 		return (buf);
-	while (can_access_at_index(buf, 0)
-		&& is_json_whitespace(parse_buf_at_offset(buf)[0]))
+	while (rj_can_access_at_index(buf, 0)
+		&& rj_is_json_whitespace(rj_parse_buf_at_offset(buf)[0]))
 		buf->offset++;
 	return (buf);
 }
 
-bool	can_read_n_bytes(t_parse_buf const *const buf, size_t len)
+bool	rj_can_read_n_bytes(t_parse_buf const *const buf, size_t len)
 {
 	if (!buf || !buf->content)
 		return (false);
 	return (buf->offset + len <= buf->length);
 }
 
-bool	can_access_at_index(t_parse_buf const *const buf, size_t index)
+bool	rj_can_access_at_index(t_parse_buf const *const buf, size_t index)
 {
 	if (!buf || !buf->content)
 		return (false);
 	return (buf->offset + index < buf->length);
 }
 
-char	*parse_buf_at_offset(t_parse_buf const *const buf)
+char	*rj_parse_buf_at_offset(t_parse_buf const *const buf)
 {
 	return ((char *)(buf->content + buf->offset));
 }

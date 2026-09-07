@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	encode_utf8(char *out, unsigned int cp)
+#include "internal.h"
+
+int	rj_encode_utf8(char *out, unsigned int cp)
 {
 	if (cp <= 0x7F)
 	{

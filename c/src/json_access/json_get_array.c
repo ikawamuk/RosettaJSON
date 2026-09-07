@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json.h"
+#include "rosetta_json/json.h"
 
 size_t	json_get_array_size(t_json const *const array)
 {

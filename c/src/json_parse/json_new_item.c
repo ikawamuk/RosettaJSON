@@ -12,9 +12,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "json.h"
+#include "internal.h"
 
-t_json	*json_new_item(void)
+t_json	*rj_new_item(void)
 {
 	t_json	*item;
 

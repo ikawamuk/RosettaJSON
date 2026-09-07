@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "json.h"
 #include "test_util.h"
+#include "rosetta_json/json.h"
 
 static char	*read_json_argument(int argc, char *argv[]);
 static int	check_round_trip(t_json *original,

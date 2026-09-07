@@ -11,16 +11,15 @@
 /* ************************************************************************** */
 
 #include <string.h>
-#include "json.h"
-#include "output_buf.h"
+#include "internal.h"
 
-int	generate_true(t_json const *const item, t_output_buf *const buf)
+int	rj_generate_true(t_json const *const item, t_output_buf *const buf)
 {
 	char	*write_pos;
 
 	if (!item || !buf)
 		return (-1);
-	write_pos = ensure(buf, 5);
+	write_pos = rj_ensure(buf, 5);
 	if (!write_pos)
 		return (-1);
 	strcpy(write_pos, "true");

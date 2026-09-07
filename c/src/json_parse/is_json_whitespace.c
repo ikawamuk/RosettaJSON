@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include <stdbool.h>
+#include "internal.h"
 
-bool	is_json_whitespace(char c)
+bool	rj_is_json_whitespace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
 }

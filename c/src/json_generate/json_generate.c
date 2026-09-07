@@ -12,21 +12,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "json.h"
-#include "json_error.h"
-#include "output_buf.h"
+#include "internal.h"
 
 static char	*generate(t_json const *const item, bool is_formatted);
-static void	update_offset(t_output_buf *const buf);
-int			generate_value(t_json const *const item, t_output_buf *const buf);
-
-int			generate_null(t_json const *const item, t_output_buf *const buf);
-int			generate_true(t_json const *const item, t_output_buf *const buf);
-int			generate_false(t_json const *const item, t_output_buf *const buf);
-int			generate_number(t_json const *const item, t_output_buf *const buf);
-int			generate_string(t_json const *const item, t_output_buf *const buf);
-int			generate_array(t_json const *const item, t_output_buf *const buf);
-int			generate_object(t_json const *const item, t_output_buf *const buf);
 
 char	*json_generate(const t_json *item)
 {
@@ -44,14 +32,14 @@ static char	*generate(t_json const *const item, bool is_formatted)
 	t_output_buf		buf;
 
 	rev = NULL;
-	if (output_buf_init(&buf, is_formatted) != 0)
+	if (rj_output_buf_init(&buf, is_formatted) != 0)
 		return (NULL);
-	if (generate_value(item, &buf) != 0)
+	if (rj_generate_value(item, &buf) != 0)
 	{
 		free((void *)buf.content);
 		return (NULL);
 	}
-	update_offset(&buf);
+	rj_update_offset(&buf);
 	rev = realloc((void *)buf.content, buf.offset + 1);
 	if (!rev)
 	{
@@ -62,34 +50,23 @@ static char	*generate(t_json const *const item, bool is_formatted)
 	return (rev);
 }
 
-int	generate_value(t_json const *const item, t_output_buf *const buf)
+int	rj_generate_value(t_json const *const item, t_output_buf *const buf)
 {
 	if (!item || !buf)
 		return (-1);
 	if (item->type == JSON_Null)
-		return (generate_null(item, buf));
+		return (rj_generate_null(item, buf));
 	if (item->type == JSON_True)
-		return (generate_true(item, buf));
+		return (rj_generate_true(item, buf));
 	if (item->type == JSON_False)
-		return (generate_false(item, buf));
+		return (rj_generate_false(item, buf));
 	if (item->type == JSON_Number)
-		return (generate_number(item, buf));
+		return (rj_generate_number(item, buf));
 	if (item->type == JSON_String)
-		return (generate_string(item, buf));
+		return (rj_generate_string(item, buf));
 	if (item->type == JSON_Array)
-		return (generate_array(item, buf));
+		return (rj_generate_array(item, buf));
 	if (item->type == JSON_Object)
-		return (generate_object(item, buf));
+		return (rj_generate_object(item, buf));
 	return (-1);
-}
-
-static void	update_offset(t_output_buf *const buf)
-{
-	const char	*ptr;
-
-	ptr = NULL;
-	if (!buf || !buf->content)
-		return ;
-	ptr = (const char *)buf->content + buf->offset;
-	buf->offset += strlen((const char *)ptr);
 }

@@ -10,19 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "json_error.h"
+#include "internal.h"
 
 static t_json_error	g_error;
 
-void	json_set_error(size_t pos, t_error_code code)
+void	rj_set_error(size_t pos, t_error_code code)
 {
 	g_error.position = pos;
 	g_error.code = code;
 }
 
-void	json_error_reset(void)
+void	rj_error_reset(void)
 {
-	return (json_set_error(-1, NO_ERROR));
+	return (rj_set_error(-1, NO_ERROR));
 }
 
 int	json_get_error_code(void)

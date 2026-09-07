@@ -14,7 +14,7 @@
 # define TEST_UTIL_H
 
 # include <stdbool.h>
-# include "json.h"
+# include "rosetta_json/json.h"
 
 char	*read_file_to_buffer(int fd);
 bool	json_equals(const t_json *a, const t_json *b);
