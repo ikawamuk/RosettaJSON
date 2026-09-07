@@ -17,43 +17,52 @@
 #include "json.h"
 #include "test_util.h"
 
-static int	check_round_trip(t_json *original, char *(*generate_fn)(const t_json *));
+static char	*read_json_argument(int argc, char *argv[]);
+static int	check_round_trip(t_json *original,
+				char *(*generate_fn)(const t_json *));
 
 int	main(int argc, char *argv[])
 {
-	int		fd;
 	char	*json_text;
 	t_json	*original;
+	int		result;
+
+	json_text = read_json_argument(argc, argv);
+	if (!json_text)
+		return (2);
+	original = json_parse(json_text);
+	free(json_text);
+	if (!original)
+		return (1);
+	result = 0;
+	if (check_round_trip(original, json_generate_unformatted) != 0
+		|| check_round_trip(original, json_generate) != 0)
+		result = 1;
+	json_delete(original);
+	return (result);
+}
+
+static char	*read_json_argument(int argc, char *argv[])
+{
+	int		fd;
+	char	*json_text;
 
 	if (argc < 2)
 	{
 		dprintf(2, "Usage: %s <test.json>\n", argv[0]);
-		return (2);
+		return (NULL);
 	}
 	fd = open(argv[1], O_RDONLY);
 	json_text = read_file_to_buffer(fd);
 	if (fd != STDIN_FILENO)
 		close(fd);
 	if (!json_text)
-	{
 		dprintf(2, "Error: Could not open or read file: %s\n", argv[1]);
-		return (2);
-	}
-	original = json_parse(json_text);
-	free(json_text);
-	if (!original)
-		return (1);
-	if (check_round_trip(original, json_generate_unformatted) != 0
-		|| check_round_trip(original, json_generate) != 0)
-	{
-		json_delete(original);
-		return (1);
-	}
-	json_delete(original);
-	return (0);
+	return (json_text);
 }
 
-static int	check_round_trip(t_json *original, char *(*generate_fn)(const t_json *))
+static int	check_round_trip(t_json *original,
+		char *(*generate_fn)(const t_json *))
 {
 	char	*generated;
 	t_json	*reparsed;

@@ -43,7 +43,5 @@ int	main(int argc, char *argv[])
 	parse_succeed = (json_data) != NULL;
 	json_delete(json_data);
 	free(json_text);
-	if (parse_succeed)
-		return (0);
-	return (1);
+	return (!parse_succeed);
 }

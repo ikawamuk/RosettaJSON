@@ -33,8 +33,6 @@ t_parse_buf	*parse_buf_skip_whitespace(t_parse_buf *const buf)
 	while (can_access_at_index(buf, 0)
 		&& is_json_whitespace(parse_buf_at_offset(buf)[0]))
 		buf->offset++;
-	// if (buf->offset == buf->length)
-	// 	buf->offset--;
 	return (buf);
 }
 

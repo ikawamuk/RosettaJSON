@@ -37,6 +37,7 @@ SRCS		:= \
 	$(SRC_DIR)/json_parse/parse_true.c \
 	$(SRC_DIR)/json_parse/parse_false.c \
 	$(SRC_DIR)/json_parse/parse_number.c \
+	$(SRC_DIR)/json_parse/number_length.c \
 	$(SRC_DIR)/json_parse/parse_string.c \
 	$(SRC_DIR)/json_parse/parse_char.c \
 	$(SRC_DIR)/json_parse/json_array.c \

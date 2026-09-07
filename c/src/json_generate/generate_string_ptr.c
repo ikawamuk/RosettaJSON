@@ -17,7 +17,7 @@
 static size_t	count_literal_length(const char *str);
 static int		string_to_literal(char *dest, const char *src);
 
-int escape_single_char(char unescaped_char, char *out_char);
+int				escape_single_char(char unescaped_char, char *out_char);
 
 int	generate_string_ptr(char *str, t_output_buf *const buf)
 {
@@ -41,14 +41,14 @@ int	generate_string_ptr(char *str, t_output_buf *const buf)
 
 static void	generate_utf16_hex(char *out, unsigned char c)
 {
-    static const char hex[] = "0123456789abcdef";
+	static const char	hex[] = "0123456789abcdef";
 
-    out[0] = '\\';
-    out[1] = 'u';
-    out[2] = '0';
-    out[3] = '0';
-    out[4] = hex[(c >> 4) & 0x0F];
-    out[5] = hex[c & 0x0F];
+	out[0] = '\\';
+	out[1] = 'u';
+	out[2] = '0';
+	out[3] = '0';
+	out[4] = hex[(c >> 4) & 0x0F];
+	out[5] = hex[c & 0x0F];
 }
 
 static int	string_to_literal(char *dest, const char *src)

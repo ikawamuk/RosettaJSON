@@ -18,16 +18,17 @@
 #include "json_error.h"
 #include "parse_buf.h"
 
-static bool	parse_buf_is_eof(t_parse_buf *buf);
-int			parse_value(t_json *item, t_parse_buf *const buf);
-t_json		*json_new_item(void);
-int			parse_true(t_json *item, t_parse_buf *const buf);
-int			parse_false(t_json *item, t_parse_buf *const buf);
-int			parse_null(t_json *item, t_parse_buf *const buf);
-int			parse_number(t_json *item, t_parse_buf *const buf);
-int			parse_string(t_json *item, t_parse_buf *const buf);
-int			parse_array(t_json *item, t_parse_buf *const buf);
-int			parse_object(t_json *item, t_parse_buf *const buf);
+static bool		parse_buf_is_eof(t_parse_buf *buf);
+static t_json	*parse_document(t_json *item, t_parse_buf *const buf);
+int				parse_value(t_json *item, t_parse_buf *const buf);
+t_json			*json_new_item(void);
+int				parse_true(t_json *item, t_parse_buf *const buf);
+int				parse_false(t_json *item, t_parse_buf *const buf);
+int				parse_null(t_json *item, t_parse_buf *const buf);
+int				parse_number(t_json *item, t_parse_buf *const buf);
+int				parse_string(t_json *item, t_parse_buf *const buf);
+int				parse_array(t_json *item, t_parse_buf *const buf);
+int				parse_object(t_json *item, t_parse_buf *const buf);
 
 t_json	*json_parse(const char *json_text)
 {
@@ -44,15 +45,21 @@ t_json	*json_parse(const char *json_text)
 		return (NULL);
 	}
 	parse_buf_init(&buffer, json_text);
-	if (parse_value(item, parse_buf_skip_whitespace(&buffer)) != 0)
+	if (!parse_document(item, &buffer))
 	{
 		json_delete(item);
 		return (NULL);
 	}
-	parse_buf_skip_whitespace(&buffer);
-	if (!parse_buf_is_eof(&buffer))
+	return (item);
+}
+
+static t_json	*parse_document(t_json *item, t_parse_buf *const buf)
+{
+	if (parse_value(item, parse_buf_skip_whitespace(buf)) != 0)
+		return (NULL);
+	parse_buf_skip_whitespace(buf);
+	if (!parse_buf_is_eof(buf))
 	{
-		json_delete(item);
 		json_set_error(0, TRAILING_GARBAGE);
 		return (NULL);
 	}
