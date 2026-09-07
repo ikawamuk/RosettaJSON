@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/02 22:17:12 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/04 17:32:56 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/08 08:50:52 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	rj_parse_object(t_json *item, t_parse_buf *const buf)
 {
 	t_json_object	*tmp_object;
 
+	++buf->depth;
 	if (buf->depth >= JSON_NESTING_LIMIT)
 		return (fail(buf, NULL, NESTING_IS_TOO_DEEP));
-	++buf->depth;
 	if (rj_parse_buf_at_offset(buf)[0] != '{')
 		return (fail(buf, NULL, INVALID_TOKEN));
 	++buf->offset;
@@ -97,6 +97,7 @@ static int	fail(t_parse_buf *buf, t_json_object *obj, t_error_code code)
 {
 	rj_object_delete(obj);
 	rj_set_error(buf->offset, code);
+	--buf->depth;
 	return (-1);
 }
 
