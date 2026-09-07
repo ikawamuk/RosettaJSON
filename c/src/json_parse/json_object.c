@@ -42,3 +42,26 @@ void	json_object_delete(t_json_object *object)
 	json_object_delete(object->next);
 	free(object);
 }
+
+void	json_object_merge_duplicate(t_json_object *list, t_json_object **cur)
+{
+	t_json_object	*dup;
+	t_json_object	*prev;
+
+	dup = list;
+	while (dup && dup != *cur)
+	{
+		if (strcmp(dup->key, (*cur)->key) == 0)
+			break ;
+		dup = dup->next;
+	}
+	if (!dup || dup == *cur)
+		return ;
+	prev = (*cur)->prev;
+	json_delete(dup->value);
+	dup->value = (*cur)->value;
+	(*cur)->value = NULL;
+	prev->next = NULL;
+	json_object_delete(*cur);
+	*cur = prev;
+}

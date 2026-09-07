@@ -20,6 +20,8 @@ static int		success(t_json *item, t_parse_buf *buf, t_json_object *head);
 static int		fail(t_parse_buf *buf, t_json_object *obj, t_error_code code);
 t_json_object	*json_object_new_member(void);
 void			json_object_delete(t_json_object *object);
+void			json_object_merge_duplicate(t_json_object *list,
+					t_json_object **cur);
 t_json			*json_new_item(void);
 int				parse_string(t_json *item, t_parse_buf *const buf);
 int				parse_value(t_json *item, t_parse_buf *const buf);
@@ -71,6 +73,7 @@ static int	parse_object_core(t_json_object **list, t_parse_buf *const buf)
 		++buf->offset;
 		if (parse_value(cur->value, parse_buf_skip_whitespace(buf)) != 0)
 			return (fail(buf, *list, json_get_error_code()));
+		json_object_merge_duplicate(*list, &cur);
 		parse_buf_skip_whitespace(buf);
 		if (!can_access_at_index(buf, 0) || parse_buf_at_offset(buf)[0] != ',')
 			break ;
