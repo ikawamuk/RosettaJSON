@@ -9,6 +9,8 @@
 !c/**/*.c
 !c/**/*.h
 !c/run_test.sh
+!c/run_test_generate.sh
+!c/run_test_transform.sh
 !c/**/Makefile
 
 JSONTestSuite/

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_main.c                                        :+:      :+:    :+:   */
+/*   test_generate_main.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/30 02:05:16 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/04 16:06:27 by ikawamuk         ###   ########.fr       */
+/*   Created: 2026/09/07 00:00:00 by ikawamuk          #+#    #+#             */
+/*   Updated: 2026/09/07 00:00:00 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <sys/stat.h>
 #include "json.h"
 #include "test_util.h"
+
+static int	check_round_trip(t_json *original, char *(*generate_fn)(const t_json *));
 
 int	main(int argc, char *argv[])
 {
 	int		fd;
 	char	*json_text;
-	t_json	*json_data;
-	bool	parse_succeed;
+	t_json	*original;
 
 	if (argc < 2)
 	{
@@ -39,11 +39,36 @@ int	main(int argc, char *argv[])
 		dprintf(2, "Error: Could not open or read file: %s\n", argv[1]);
 		return (2);
 	}
-	json_data = json_parse(json_text);
-	parse_succeed = (json_data) != NULL;
-	json_delete(json_data);
+	original = json_parse(json_text);
 	free(json_text);
-	if (parse_succeed)
-		return (0);
-	return (1);
+	if (!original)
+		return (1);
+	if (check_round_trip(original, json_generate_unformatted) != 0
+		|| check_round_trip(original, json_generate) != 0)
+	{
+		json_delete(original);
+		return (1);
+	}
+	json_delete(original);
+	return (0);
+}
+
+static int	check_round_trip(t_json *original, char *(*generate_fn)(const t_json *))
+{
+	char	*generated;
+	t_json	*reparsed;
+	bool	matched;
+
+	generated = generate_fn(original);
+	if (!generated)
+		return (-1);
+	reparsed = json_parse(generated);
+	free(generated);
+	if (!reparsed)
+		return (-1);
+	matched = json_equals(original, reparsed);
+	json_delete(reparsed);
+	if (!matched)
+		return (-1);
+	return (0);
 }

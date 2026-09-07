@@ -71,14 +71,19 @@ SRCS		:= \
 	$(SRC_DIR)/utils/single_escaped_char_util.c \
 
 TEST_RUNNER		:= ./run_test.sh
+TEST_GENERATE_RUNNER	:= ./run_test_generate.sh
+TEST_TRANSFORM_RUNNER	:= ./run_test_transform.sh
 TEST_TARGET		:= rosetta_json
+TEST_GENERATE_TARGET	:= rosetta_json_generate
 TEST_SRC_DIR	:= src/test
-TEST_SRCS		:= $(TEST_SRC_DIR)/test_main.c
+TEST_SRCS		:= $(TEST_SRC_DIR)/test_main.c $(TEST_SRC_DIR)/test_util.c
+TEST_GENERATE_SRCS	:= $(TEST_SRC_DIR)/test_generate_main.c $(TEST_SRC_DIR)/test_util.c
 TEST_SUITE		:= ../JSONTestSuite
 
 OBJS		:= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 TEST_OBJS	:= $(TEST_SRCS:%.c=$(OBJ_DIR)/%.o)
-DEPS		:= $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
+TEST_GENERATE_OBJS	:= $(TEST_GENERATE_SRCS:%.c=$(OBJ_DIR)/%.o)
+DEPS		:= $(sort $(OBJS:.o=.d) $(TEST_OBJS:.o=.d) $(TEST_GENERATE_OBJS:.o=.d))
 
 # ---------------------------------------------------------------- targets -- #
 
@@ -91,15 +96,31 @@ test: $(TEST_TARGET)
 	chmod +x $(TEST_RUNNER)
 	$(TEST_RUNNER)
 
+test-generate: $(TEST_TARGET) $(TEST_GENERATE_TARGET)
+	chmod +x $(TEST_GENERATE_RUNNER)
+	$(TEST_GENERATE_RUNNER)
+
+test-transform: $(TEST_TARGET) $(TEST_GENERATE_TARGET)
+	chmod +x $(TEST_TRANSFORM_RUNNER)
+	$(TEST_TRANSFORM_RUNNER)
+
+test-all:
+	-$(MAKE) test
+	-$(MAKE) test-generate
+	-$(MAKE) test-transform
+
 $(TEST_TARGET): $(TEST_OBJS) $(NAME) $(TEST_SUITE)
 	$(CC) $(CFLAGS) $(TEST_OBJS) $(NAME) -o $@ $(LDLIBS)
+
+$(TEST_GENERATE_TARGET): $(TEST_GENERATE_OBJS) $(NAME) $(TEST_SUITE)
+	$(CC) $(CFLAGS) $(TEST_GENERATE_OBJS) $(NAME) -o $@ $(LDLIBS)
 
 $(TEST_SUITE):
 	git clone git@github.com:nst/JSONTestSuite.git $@
 
 # デバッグビルド (シンボル + AddressSanitizer)
 debug: CFLAGS += -g3 -fsanitize=address,undefined
-debug: fclean $(TEST_TARGET)
+debug: fclean $(TEST_TARGET) $(TEST_GENERATE_TARGET)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -109,10 +130,10 @@ clean:
 	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME) $(TEST_TARGET)
+	$(RM) $(NAME) $(TEST_TARGET) $(TEST_GENERATE_TARGET)
 
 re: fclean all
 
 -include $(DEPS)
 
-.PHONY: all test debug clean fclean re test
+.PHONY: all test test-generate test-transform test-all debug clean fclean re
