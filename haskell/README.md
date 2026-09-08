@@ -1,4 +1,4 @@
-# JSON Parser / Haskel
+# JSON Parser / Haskell
 
 ## 機能
 - パーサ
