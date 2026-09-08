@@ -11,4 +11,10 @@
 !c/**/*.sh
 !c/**/Makefile
 
+!haskell/**/*.hs
+!haskell/*.cabal
+!haskell/cabal.project
+!haskell/LICENSE
+!haskell/CHANGELOG.md
+
 JSONTestSuite/
