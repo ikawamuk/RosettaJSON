@@ -10,8 +10,15 @@
 #                                                                              #
 # **************************************************************************** #
 
+LIB_NAME	:= rosetta_json
+VERSION		:= 0.1.0
+
+PREFIX		?= /usr/local
+DESTDIR		?=
+
 BUILD_DIR	:= build
-NAME		:= $(BUILD_DIR)/libjson.a
+NAME		:= $(BUILD_DIR)/lib$(LIB_NAME).a
+PC_FILE		:= $(BUILD_DIR)/$(LIB_NAME).pc
 
 INC_DIR		:= include
 SRC_DIR		:= src
@@ -142,6 +149,34 @@ check-symbols: $(NAME)
 	fi; \
 	echo "OK: 全記号が json_ / rj_ prefix に準拠"
 
+# pkg-config 用ファイル。PREFIX に追従させるため毎回生成する (.PHONY 指定)
+$(PC_FILE):
+	@mkdir -p $(dir $@)
+	@printf '%s\n' \
+		'prefix=$(PREFIX)' \
+		'exec_prefix=$${prefix}' \
+		'libdir=$${exec_prefix}/lib' \
+		'includedir=$${prefix}/include' \
+		'' \
+		'Name: $(LIB_NAME)' \
+		'Description: JSON parser, generator and accessors' \
+		'Version: $(VERSION)' \
+		'Libs: -L$${libdir} -l$(LIB_NAME) -lm' \
+		'Cflags: -I$${includedir}' > $@
+
+install: $(NAME) $(PC_FILE)
+	install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
+	install -d $(DESTDIR)$(PREFIX)/include/$(LIB_NAME)
+	install -m 644 $(NAME) $(DESTDIR)$(PREFIX)/lib/
+	install -m 644 $(INC_DIR)/$(LIB_NAME)/json.h \
+		$(DESTDIR)$(PREFIX)/include/$(LIB_NAME)/
+	install -m 644 $(PC_FILE) $(DESTDIR)$(PREFIX)/lib/pkgconfig/
+
+uninstall:
+	$(RM) $(DESTDIR)$(PREFIX)/lib/lib$(LIB_NAME).a
+	$(RM) $(DESTDIR)$(PREFIX)/lib/pkgconfig/$(LIB_NAME).pc
+	$(RM) -r $(DESTDIR)$(PREFIX)/include/$(LIB_NAME)
+
 clean:
 	$(RM) -r $(OBJ_DIR)
 
@@ -153,4 +188,4 @@ re: fclean all
 -include $(DEPS)
 
 .PHONY: all test test-generate test-transform test-all check-symbols debug \
-	clean fclean re
+	install uninstall $(PC_FILE) clean fclean re
