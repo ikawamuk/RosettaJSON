@@ -43,6 +43,12 @@ maintainer:         ikawamuk@student.42.fr
 -- A copyright notice.
 -- copyright:
 category:           Text
+synopsis:           A JSON library: data type, parser, generator and accessors
+description:
+    RosettaJSON の Haskell 実装。JSON のデータ型、パーサ、
+    ジェネレータ、アクセサを提供する学習用ライブラリです。
+    RFC 8259 準拠を目標としています。
+
 build-type:         Simple
 
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
@@ -80,7 +86,7 @@ library
     -- Base language which the package is written in.
     default-language: GHC2021
 
-test-suite haskel-test
+test-suite haskell-test
     -- Import common warning flags.
     import:           warnings
 
