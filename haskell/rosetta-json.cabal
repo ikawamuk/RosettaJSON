@@ -23,10 +23,13 @@ name:               rosetta-json
 version:            0.1.0.0
 
 -- A short (one-line) description of the package.
--- synopsis:
+synopsis:           A JSON library: data type, parser, generator and accessors
 
 -- A longer description of the package.
--- description:
+description:
+    RosettaJSON の Haskell 実装。JSON のデータ型、パーサ、
+    ジェネレータ、アクセサを提供する学習用ライブラリです。
+    RFC 8259 準拠を目標としています。
 
 -- The license under which the package is released.
 license:            BSD-3-Clause
@@ -43,12 +46,6 @@ maintainer:         ikawamuk@student.42.fr
 -- A copyright notice.
 -- copyright:
 category:           Text
-synopsis:           A JSON library: data type, parser, generator and accessors
-description:
-    RosettaJSON の Haskell 実装。JSON のデータ型、パーサ、
-    ジェネレータ、アクセサを提供する学習用ライブラリです。
-    RFC 8259 準拠を目標としています。
-
 build-type:         Simple
 
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
@@ -78,7 +75,7 @@ library
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.20.2.0
+    build-depends: base >= 4.14 && < 5
 
     -- Directories containing source files.
     hs-source-dirs:   src
