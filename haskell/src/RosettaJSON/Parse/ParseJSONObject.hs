@@ -20,12 +20,17 @@ parseMembers key_parser value_parser input = case key_parser input of
             Right (rest3, val) -> case skipSpace rest3 of
                 ('}' : rest4) -> Right (rest4, [(key, val)])
                 (',' : rest4) -> case parseMembers key_parser value_parser (skipSpace rest4) of
-                    Right (rest5, members) -> Right (rest5, (key, val) : members)
+                    Right (rest5, members) -> Right (rest5, insertMember key val members)
                     Left err               -> Left err
                 _ -> Left InvalidToken 
             Left err           -> Left err
         _ -> Left InvalidToken
     Right _ -> Left InvalidToken
+
+insertMember :: String -> JSONValue -> [(String, JSONValue)] -> [(String, JSONValue)]
+insertMember k v members
+    | any (\(k', _) -> k == k') members = members
+    | otherwise                         = (k, v) : members
 
 skipSpace :: String -> String
 skipSpace "" = ""
