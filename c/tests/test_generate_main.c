@@ -6,10 +6,11 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/07 00:00:00 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/07 00:00:00 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/11 14:25:16 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>

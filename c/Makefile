@@ -6,7 +6,7 @@
 #    By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/30 03:18:23 by ikawamuk          #+#    #+#              #
-#    Updated: 2026/09/11 14:17:13 by ikawamuk         ###   ########.fr        #
+#    Updated: 2026/09/11 14:24:15 by ikawamuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ SRC_DIR		:= src
 TEST_DIR	:= tests
 OBJ_DIR		:= $(BUILD_DIR)/obj
 
-CC			:= gcc
+CC			:= cc
 CFLAGS		:= -std=c99 -Wall -Wextra -Werror -pedantic-errors
 LDLIBS 		:= -lm
 CPPFLAGS	:= -I $(INC_DIR) -I $(SRC_DIR) -MMD -MP
