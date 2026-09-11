@@ -6,7 +6,7 @@
 /*   By: ikawamuk <ikawamuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 00:11:36 by ikawamuk          #+#    #+#             */
-/*   Updated: 2026/09/03 08:37:25 by ikawamuk         ###   ########.fr       */
+/*   Updated: 2026/09/11 14:15:12 by ikawamuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	rj_set_error(size_t pos, t_error_code code)
 
 void	rj_error_reset(void)
 {
-	return (rj_set_error(-1, NO_ERROR));
+	rj_set_error(-1, NO_ERROR);
 }
 
 int	json_get_error_code(void)
