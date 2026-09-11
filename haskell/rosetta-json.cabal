@@ -62,11 +62,14 @@ library
     import:           warnings
 
     -- Modules exported by the library.
-    exposed-modules:  RosettaJSON
-    other-modules:    RosettaJSON.Types
-                      RosettaJSON.Parse
-                      RosettaJSON.Generate
-                      RosettaJSON.Access
+    exposed-modules: RosettaJSON
+                    , RosettaJSON.Types
+
+    other-modules:   RosettaJSON.Parse.ParseJSON
+                     RosettaJSON.Parse.ParseError
+                     RosettaJSON.Parse.ParseJSONLiteral
+                     RosettaJSON.Parse.ParseJSONNumber
+                     RosettaJSON.Parse.ParseJSONString
 
     -- Modules included in this library but not exported.
     -- other-modules:

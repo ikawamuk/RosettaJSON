@@ -1,8 +1,8 @@
 
 module RosettaJSON
-	( JSONValue(..)
-	, parseJSON
-	) where
+    ( JSONValue(..)
+    , parseJSON
+    ) where
 
 import RosettaJSON.Types (JSONValue(..))
-import module RosettaJSON.Parse (parseJSON)
+import RosettaJSON.Parse.ParseJSON (parseJSON)

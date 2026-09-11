@@ -6,6 +6,7 @@
 - アクセサ
 
 ## 備考
+- モジュールは Prelude のみを許容する
 
 ## 参考
 - [Galoisinc/json](https://github.com/GaloisInc/json)
