@@ -1,9 +1,9 @@
 module RosettaJSON.Parse.ParseJSONString (parseJSONString) where
 
 import RosettaJSON.Types (JSONValue(..))
-import RosettaJSON.Parse.ParseError (ParseError(..))
+import RosettaJSON.Parse.ParseResult (ParseError(..), ParseResult)
 
-parseJSONString :: String -> Either ParseError (String, JSONValue)
+parseJSONString :: String -> ParseResult
 parseJSONString ('"' : rest) = case go rest of
     Right (remaining, str) -> Right (remaining, JSONString str)
     Left err               -> Left err
@@ -32,19 +32,24 @@ go (x : xs)
 
 attach :: Char -> Either ParseError (String, String) -> Either ParseError (String, String)
 attach c (Right (rest, parsed)) = Right (rest, c : parsed)
-attach _ (Left err)            = Left err
+attach _ (Left err)             = Left err
 
 isHexDigit :: Char -> Bool
 isHexDigit x = x `elem` "0123456789abcdefABCDEF"
 
-hexVal :: Char -> Int
-hexVal c
-    | c >= '0' && c <= '9' = fromEnum c - fromEnum '0'
-    | c >= 'a' && c <= 'f' = fromEnum c - fromEnum 'a' + 10
-    | c >= 'A' && c <= 'F' = fromEnum c - fromEnum 'A' + 10
-    | otherwise            = 0
-
 hexToChar :: String -> Maybe Char
-hexToChar str =
-    let code = foldl (\acc ch -> acc * 16 + hexVal ch) 0 str
-    in Just (toEnum code)
+hexToChar str
+    | length str /= 4 = Nothing
+    | otherwise       = toEnum <$> foldl accum (Just 0) str
+  where
+    accum Nothing _  = Nothing
+    accum (Just acc) ch = case hexVal ch of
+        Just v  -> Just (acc * 16 + v)
+        Nothing -> Nothing
+
+hexVal :: Char -> Maybe Int
+hexVal c
+    | c >= '0' && c <= '9' = Just (fromEnum c - fromEnum '0')
+    | c >= 'a' && c <= 'f' = Just (fromEnum c - fromEnum 'a' + 10)
+    | c >= 'A' && c <= 'F' = Just (fromEnum c - fromEnum 'A' + 10)
+    | otherwise            = Nothing

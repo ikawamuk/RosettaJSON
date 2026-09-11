@@ -66,10 +66,12 @@ library
                     , RosettaJSON.Types
 
     other-modules:   RosettaJSON.Parse.ParseJSON
-                     RosettaJSON.Parse.ParseError
+                     RosettaJSON.Parse.ParseResult
                      RosettaJSON.Parse.ParseJSONLiteral
                      RosettaJSON.Parse.ParseJSONNumber
                      RosettaJSON.Parse.ParseJSONString
+                     RosettaJSON.Parse.ParseJSONArray
+                     RosettaJSON.Parse.ParseJSONObject
 
     -- Modules included in this library but not exported.
     -- other-modules:

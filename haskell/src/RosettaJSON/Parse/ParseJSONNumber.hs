@@ -2,10 +2,9 @@ module RosettaJSON.Parse.ParseJSONNumber
     (parseJSONNumber) where
 
 import RosettaJSON.Types (JSONValue(..))
-import RosettaJSON.Parse.ParseError (ParseError(..))
+import RosettaJSON.Parse.ParseResult (ParseError(..), ParseResult)
 
-
-parseJSONNumber :: String -> Either ParseError (String, JSONValue)
+parseJSONNumber :: String -> ParseResult
 parseJSONNumber s = 
     case reads s of
         [(n, rest)] -> Right (rest, JSONNumber n)
